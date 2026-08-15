@@ -5,6 +5,8 @@ import Auth from "./pages/Auth";
 import MyIdeas from "./pages/MyIdeas";
 import Saved from "./pages/Saved";
 import Profile from "./pages/Profile";
+import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 
 const Placeholder = ({ title }) => (
@@ -43,7 +45,11 @@ const router = createBrowserRouter([
 
   // Main App routes wrapped with Layout (Navbar + Main Content)
   {
-    element: <Layout />,
+    element: (
+      <ProtectedRoute>
+        <Layout />
+      </ProtectedRoute>
+    ),
     errorElement: <NotFound />,
     children: [
       {
@@ -71,7 +77,11 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
+  );
 }
 
 export default App;

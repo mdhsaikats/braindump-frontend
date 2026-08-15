@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Lightbulb = ({ className }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256" className={className}>
@@ -23,13 +24,15 @@ const List = ({ className }) => (
 );
 
 const NavBar = () => {
+  const { user, token, logout } = useAuth();
+
   return (
     <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
 
           {/* Left: Logo */}
-          <Link to="/" className="flex-shrink-0 flex items-center gap-2 group no-underline">
+          <Link to="/explore" className="flex-shrink-0 flex items-center gap-2 group no-underline">
             <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white group-hover:bg-brand-600 transition-colors">
               <Lightbulb weight="bold" className="text-xl" />
             </div>
@@ -90,21 +93,35 @@ const NavBar = () => {
           </div>
           
           <div className="flex items-center gap-4 ml-6">
-            <Link to="/profile" className="flex items-center gap-2 group">
-              <img
-                src="https://ui-avatars.com/api/?name=Saikat&background=0f172a&color=fff"
-                alt="Profile"
-                className="w-8 h-8 rounded-full ring-2 ring-slate-200 group-hover:ring-teal-500 transition-all object-cover"
-              />
-            </Link>
-            <NavLink 
-              to="/login" 
-              className={({ isActive }) => 
-                `hidden sm:block text-sm font-medium transition-colors ${isActive ? 'text-slate-900 font-semibold' : 'text-slate-600 hover:text-slate-900'}`
-              }
-            >
-              Login
-            </NavLink>
+            {token && (
+              <Link to="/profile" className="flex items-center gap-2 group">
+                <img
+                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user?.username || 'User')}&background=0f172a&color=fff`}
+                  alt="Profile"
+                  className="w-8 h-8 rounded-full ring-2 ring-slate-200 group-hover:ring-teal-500 transition-all object-cover"
+                />
+                <span className="hidden sm:inline text-xs font-semibold text-slate-700 group-hover:text-slate-900 transition-colors">
+                  @{user?.username}
+                </span>
+              </Link>
+            )}
+            {token ? (
+              <button
+                onClick={logout}
+                className="hidden sm:block text-sm font-medium text-slate-600 hover:text-slate-900 cursor-pointer"
+              >
+                Logout
+              </button>
+            ) : (
+              <NavLink 
+                to="/login" 
+                className={({ isActive }) => 
+                  `hidden sm:block text-sm font-medium transition-colors ${isActive ? 'text-slate-900 font-semibold' : 'text-slate-600 hover:text-slate-900'}`
+                }
+              >
+                Login
+              </NavLink>
+            )}
             {/* Mobile Menu Button */}
             <button className="lg:hidden p-2 text-slate-500 hover:text-slate-900">
               <List className="text-2xl" />
