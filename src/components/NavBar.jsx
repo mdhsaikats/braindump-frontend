@@ -27,7 +27,7 @@ const NavBar = () => {
     <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          
+
           {/* Left: Logo */}
           <Link to="/" className="flex-shrink-0 flex items-center gap-2 group no-underline">
             <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white group-hover:bg-brand-600 transition-colors">
@@ -42,9 +42,9 @@ const NavBar = () => {
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 group-focus-within:text-brand-600 transition-colors">
                 <MagnifyingGlass className="text-lg" />
               </div>
-              <input 
-                type="text" 
-                placeholder="Search ideas..." 
+              <input
+                type="text"
+                placeholder="Search ideas..."
                 className="block w-full pl-10 pr-12 py-2 border border-slate-200 rounded-lg leading-5 bg-slate-50 text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 sm:text-sm transition-all shadow-inner"
               />
               <div className="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
@@ -55,17 +55,17 @@ const NavBar = () => {
 
           {/* Right: Links & Auth */}
           <div className="hidden lg:flex items-center space-x-6">
-            <NavLink 
-              to="/explore" 
-              className={({ isActive }) => 
+            <NavLink
+              to="/explore"
+              className={({ isActive }) =>
                 `text-sm font-medium transition-colors ${isActive ? 'text-slate-900 font-semibold' : 'text-slate-600 hover:text-slate-900'}`
               }
             >
               Explore
             </NavLink>
-            <NavLink 
-              to="/my-ideas" 
-              className={({ isActive }) => 
+            <NavLink
+              to="/my-ideas"
+              className={({ isActive }) =>
                 `text-sm font-medium transition-colors ${isActive ? 'text-slate-900 font-semibold' : 'text-slate-600 hover:text-slate-900'}`
               }
             >
@@ -79,9 +79,24 @@ const NavBar = () => {
             >
               Saved
             </NavLink>
+            <NavLink 
+              to="/profile" 
+              className={({ isActive }) => 
+                `text-sm font-medium transition-colors ${isActive ? 'text-slate-900 font-semibold' : 'text-slate-600 hover:text-slate-900'}`
+              }
+            >
+              Profile
+            </NavLink>
           </div>
           
           <div className="flex items-center gap-4 ml-6">
+            <Link to="/profile" className="flex items-center gap-2 group">
+              <img
+                src="https://ui-avatars.com/api/?name=Saikat&background=0f172a&color=fff"
+                alt="Profile"
+                className="w-8 h-8 rounded-full ring-2 ring-slate-200 group-hover:ring-teal-500 transition-all object-cover"
+              />
+            </Link>
             <NavLink 
               to="/login" 
               className={({ isActive }) => 
@@ -90,19 +105,16 @@ const NavBar = () => {
             >
               Login
             </NavLink>
-            <button className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-slate-900 hover:bg-slate-800 shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-900">
-              Share Idea
-            </button>
             {/* Mobile Menu Button */}
             <button className="lg:hidden p-2 text-slate-500 hover:text-slate-900">
               <List className="text-2xl" />
             </button>
           </div>
-          
+
         </div>
       </div>
     </nav>
   );
-}
+};
 
 export default NavBar;

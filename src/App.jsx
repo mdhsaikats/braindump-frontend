@@ -1,7 +1,11 @@
-// src/App.jsx
-import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
 import Layout from "./layout/Layout";
 import Home from "./pages/Home";
+import Auth from "./pages/Auth";
+import MyIdeas from "./pages/MyIdeas";
+import Saved from "./pages/Saved";
+import Profile from "./pages/Profile";
+
 
 const Placeholder = ({ title }) => (
   <div className="flex flex-col items-center justify-center min-h-[60vh] text-slate-800">
@@ -13,42 +17,55 @@ const Placeholder = ({ title }) => (
 const NotFound = () => (
   <div className="flex flex-col items-center justify-center min-h-[60vh] text-slate-800">
     <h2 className="text-3xl font-extrabold mb-2 text-rose-600">404</h2>
-    <p className="text-slate-500 mb-4">Oops! The page you are looking for doesn't exist.</p>
-    <a href="/" className="px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors">
+    <p className="text-slate-500 mb-4">
+      Oops! The page you are looking for doesn't exist.
+    </p>
+    <a
+      href="/"
+      className="px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors"
+    >
       Go Home
     </a>
   </div>
 );
 
 const router = createBrowserRouter([
+  // Standalone Auth routes (Full screen, no Navbar)
+  {
+    path: "/",
+    element: <Auth />,
+    errorElement: <NotFound />,
+  },
+  {
+    path: "/login",
+    element: <Auth />,
+  },
+
+  // Main App routes wrapped with Layout (Navbar + Main Content)
   {
     element: <Layout />,
     errorElement: <NotFound />,
     children: [
       {
-        path: "/",
+        path: "/explore",
         element: <Home />,
       },
       {
-        path: "/explore",
-        element: <Home />, // Or a separate Explore component when ready
-      },
-      {
         path: "/my-ideas",
-        element: <Placeholder title="My Ideas" />,
+        element: <MyIdeas />,
       },
       {
         path: "/saved",
-        element: <Placeholder title="Saved" />,
+        element: <Saved />,
       },
       {
-        path: "/login",
-        element: <Placeholder title="Login" />,
+        path: "/profile",
+        element: <Profile />,
       },
       {
         path: "*",
         element: <NotFound />,
-      }
+      },
     ],
   },
 ]);
@@ -58,3 +75,4 @@ function App() {
 }
 
 export default App;
+
