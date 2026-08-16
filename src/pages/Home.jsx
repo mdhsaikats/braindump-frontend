@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { API_BASE_URL } from "../config/api";
 
 const PlusCircle = ({ className, weight }) => (
 
@@ -392,7 +393,7 @@ const Home = () => {
   const fetchAllIdeas = async () => {
     try {
       setLoading(true);
-      const res = await fetch("/api/v1/users/idea", {
+      const res = await fetch(`${API_BASE_URL}/api/v1/users/idea`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
       const data = await res.json();
@@ -400,7 +401,7 @@ const Home = () => {
       let savedIds = new Set();
       if (token) {
         try {
-          const savesRes = await fetch("/api/v1/users/saves", {
+          const savesRes = await fetch(`${API_BASE_URL}/api/v1/users/saves`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           const savesData = await savesRes.json();
@@ -442,7 +443,7 @@ const Home = () => {
 
     try {
       const method = currentlyBookmarked ? "DELETE" : "POST";
-      await fetch(`/api/v1/users/saves/${id}`, {
+      await fetch(`${API_BASE_URL}/api/v1/users/saves/${id}`, {
         method,
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -468,7 +469,7 @@ const Home = () => {
     );
 
     try {
-      await fetch(`/api/v1/users/idea/${id}/like`, {
+      await fetch(`${API_BASE_URL}/api/v1/users/idea/${id}/like`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
       });

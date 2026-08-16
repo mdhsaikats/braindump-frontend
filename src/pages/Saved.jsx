@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
+import { API_BASE_URL } from "../config/api";
 
 const BookmarkSimple = ({ className, weight }) => (
   <svg
@@ -210,7 +211,7 @@ const Saved = () => {
     if (!token) return;
     try {
       setLoading(true);
-      const res = await fetch("/api/v1/users/saves", {
+      const res = await fetch(`${API_BASE_URL}/api/v1/users/saves`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -234,7 +235,7 @@ const Saved = () => {
     setSavedIdeas((prev) => prev.filter((idea) => idea.id !== id));
 
     try {
-      await fetch(`/api/v1/users/saves/${id}`, {
+      await fetch(`${API_BASE_URL}/api/v1/users/saves/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });

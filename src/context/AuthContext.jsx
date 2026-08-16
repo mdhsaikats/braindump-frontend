@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { API_BASE_URL } from "../config/api";
 
 const AuthContext = createContext(null);
 
@@ -10,7 +11,7 @@ export const AuthProvider = ({ children }) => {
   // Fetch the user's profile info
   const fetchProfile = async (authToken) => {
     try {
-      const response = await fetch("/api/v1/users/profile", {
+      const response = await fetch(`${API_BASE_URL}/api/v1/users/profile`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -43,7 +44,7 @@ export const AuthProvider = ({ children }) => {
   // Login handler
   const login = async (email, password) => {
     try {
-      const response = await fetch("/api/v1/auth/login", {
+      const response = await fetch(`${API_BASE_URL}/api/v1/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -69,7 +70,7 @@ export const AuthProvider = ({ children }) => {
   // Register handler
   const register = async (username, email, password) => {
     try {
-      const response = await fetch("/api/v1/auth/register", {
+      const response = await fetch(`${API_BASE_URL}/api/v1/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -103,7 +104,7 @@ export const AuthProvider = ({ children }) => {
     if (!token) return { success: false, message: "Not authenticated" };
 
     try {
-      const response = await fetch("/api/v1/users/update", {
+      const response = await fetch(`${API_BASE_URL}/api/v1/users/update`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

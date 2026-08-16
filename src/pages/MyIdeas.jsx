@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { API_BASE_URL } from "../config/api";
 
 const Plus = ({ className }) => (
 
@@ -271,7 +272,7 @@ const MyIdeas = () => {
     if (!token) return;
     try {
       setLoading(true);
-      const res = await fetch("/api/v1/users/my-ideas", {
+      const res = await fetch(`${API_BASE_URL}/api/v1/users/my-ideas`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -295,7 +296,7 @@ const MyIdeas = () => {
     setIdeas((prev) => prev.filter((idea) => idea.id !== id));
 
     try {
-      await fetch(`/api/v1/users/idea/${id}`, {
+      await fetch(`${API_BASE_URL}/api/v1/users/idea/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });

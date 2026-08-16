@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { API_BASE_URL } from "../config/api";
 
 const X = ({ className }) => (
   <svg
@@ -52,7 +53,7 @@ const ShareIdeaModal = ({ isOpen, onClose, onCreated }) => {
     try {
       const formattedTags = tags.split(",").map((t) => t.trim()).filter(Boolean);
 
-      const response = await fetch("/api/v1/users/idea", {
+      const response = await fetch(`${API_BASE_URL}/api/v1/users/idea`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
