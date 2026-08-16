@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { API_BASE_URL } from "../config/api";
+import LoaderGooeyBlobs from "../components/ui/loaders-gooey-blobs";
 
 const Plus = ({ className }) => (
 
@@ -331,8 +332,9 @@ const MyIdeas = () => {
 
         {/* Idea Cards Grid */}
         {loading ? (
-          <div className="flex justify-center items-center py-20 text-slate-500">
-            Loading your ideas...
+          <div className="flex flex-col justify-center items-center py-20 text-teal-600 gap-4">
+            <LoaderGooeyBlobs color="#0d9488" size={16} />
+            <span className="text-sm font-semibold text-slate-500">Loading your ideas...</span>
           </div>
         ) : ideas.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

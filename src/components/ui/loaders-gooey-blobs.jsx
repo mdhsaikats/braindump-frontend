@@ -1,0 +1,59 @@
+"use client";
+import * as React from "react";
+import { motion } from "motion/react";
+import { cn } from "../../lib/utils";
+
+export function LoaderGooeyBlobs({
+  className,
+  size = 20,
+  color = "currentColor",
+  duration = 1.5,
+  ...props
+}) {
+  return (
+    <div className={cn("flex items-center gap-2", className)} {...props}>
+      <svg width="0" height="0" className="absolute hidden">
+        <defs>
+          <filter id="gooey">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+            <feColorMatrix
+              in="blur"
+              mode="matrix"
+              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7"
+              result="gooey"
+            />
+            <feBlend in="SourceGraphic" in2="gooey" />
+          </filter>
+        </defs>
+      </svg>
+      <div
+        style={{ filter: "url(#gooey)" }}
+        className="flex gap-1"
+      >
+        {[0, 1, 2].map((index) => (
+          <motion.div
+            key={index}
+            className="rounded-full"
+            style={{
+              width: size,
+              height: size,
+              backgroundColor: color,
+            }}
+            animate={{
+              x: [0, 15, 0, -15, 0],
+              scale: [1, 1.2, 1, 1.2, 1],
+            }}
+            transition={{
+              duration,
+              ease: "easeInOut",
+              repeat: Infinity,
+              delay: index * 0.2,
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default LoaderGooeyBlobs;
