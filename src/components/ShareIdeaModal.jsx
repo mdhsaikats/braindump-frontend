@@ -119,7 +119,7 @@ const ShareIdeaModal = ({ isOpen, onClose, onCreated }) => {
           )}
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">
+            <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">
               Idea Title
             </label>
             <input
@@ -133,7 +133,7 @@ const ShareIdeaModal = ({ isOpen, onClose, onCreated }) => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">
+            <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">
               Description
             </label>
             <textarea
@@ -147,7 +147,7 @@ const ShareIdeaModal = ({ isOpen, onClose, onCreated }) => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">
+            <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">
               Technologies (comma separated)
             </label>
             <input

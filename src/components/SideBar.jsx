@@ -40,7 +40,7 @@ const SideBar = () => {
     <aside className="hidden lg:block w-64 flex-shrink-0 space-y-8 mt-8 ml-8">
       {/* Popular Technologies */}
       <div>
-        <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wider mb-4">
+        <h3 className="text-xs font-semibold text-slate-900 uppercase mb-4">
           Popular Technologies
         </h3>
         <div className="space-y-3">
@@ -104,7 +104,7 @@ const SideBar = () => {
 
       {/* Difficulty Filter */}
       <div className="pt-6 border-t border-slate-200">
-        <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wider mb-4">
+        <h3 className="text-xs font-semibold text-slate-900 uppercase mb-4">
           Difficulty
         </h3>
         <div className="space-y-3">

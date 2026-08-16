@@ -83,7 +83,7 @@ const Profile = () => {
         
         {/* Profile Header */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-2xl font-bold text-slate-900">
             Profile Settings
           </h1>
           <p className="text-slate-500 text-sm mt-1">
@@ -120,7 +120,7 @@ const Profile = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Username Input */}
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">
+              <label className="block text-xs font-semibold uppercase text-slate-500 mb-2">
                 Username
               </label>
               <div className="relative rounded-lg shadow-sm">
@@ -142,7 +142,7 @@ const Profile = () => {
 
             {/* Email Input */}
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">
+              <label className="block text-xs font-semibold uppercase text-slate-500 mb-2">
                 Email Address
               </label>
               <div className="relative rounded-lg shadow-sm">
@@ -161,7 +161,7 @@ const Profile = () => {
 
             {/* Bio Input */}
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">
+              <label className="block text-xs font-semibold uppercase text-slate-500 mb-2">
                 Bio
               </label>
               <textarea

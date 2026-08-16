@@ -485,7 +485,7 @@ const Home = () => {
         <div className="flex-1 min-w-0">
           {/* Feed Header & Controls */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
-            <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
+            <h2 className="text-2xl font-bold text-slate-900">
               Latest Ideas
             </h2>
 

@@ -88,7 +88,7 @@ const Auth = () => {
           {/* Username (only shown on Registration) */}
           {!isLogin && (
             <div>
-              <label htmlFor="username" className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">
+              <label htmlFor="username" className="block text-xs font-semibold uppercase text-slate-500 mb-2">
                 Username
               </label>
               <input
@@ -107,7 +107,7 @@ const Auth = () => {
 
           {/* Email Address */}
           <div>
-            <label htmlFor="email" className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">
+            <label htmlFor="email" className="block text-xs font-semibold uppercase text-slate-500 mb-2">
               Email Address
             </label>
             <input
@@ -126,7 +126,7 @@ const Auth = () => {
           {/* Password */}
           <div>
             <div className="flex justify-between items-center mb-2">
-              <label htmlFor="password" className="block text-xs font-semibold uppercase tracking-wider text-slate-500">
+              <label htmlFor="password" className="block text-xs font-semibold uppercase text-slate-500">
                 Password
               </label>
               <button

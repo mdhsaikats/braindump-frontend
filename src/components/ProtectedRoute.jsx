@@ -14,7 +14,7 @@ const ProtectedRoute = ({ children }) => {
           {/* Inner pulsating dot */}
           <div className="absolute w-6 h-6 bg-teal-500/20 rounded-full animate-pulse"></div>
         </div>
-        <p className="mt-4 text-sm font-semibold text-slate-500 tracking-wider uppercase animate-pulse">
+        <p className="mt-4 text-sm font-semibold text-slate-500 uppercase animate-pulse">
           Loading Profile...
         </p>
       </div>

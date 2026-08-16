@@ -312,7 +312,7 @@ const MyIdeas = () => {
         {/* Page Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2 gap-4">
           <div>
-            <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
+            <h2 className="text-2xl font-bold text-slate-900">
               My Ideas
             </h2>
             <p className="text-slate-500 text-sm mt-1">

@@ -16,6 +16,11 @@
   --color-brand-600: #0f766e;
 }
 
+*, ::before, ::after {
+  letter-spacing: normal !important;
+}
+
 body {
   font-family: 'Matcha Mint', system-ui, -apple-system, sans-serif;
+  letter-spacing: normal;
 }

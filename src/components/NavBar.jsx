@@ -36,7 +36,7 @@ const NavBar = () => {
             <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white group-hover:bg-brand-600 transition-colors">
               <Lightbulb weight="bold" className="text-xl" />
             </div>
-            <span className="font-bold text-xl tracking-tight text-slate-900">BrainDump</span>
+            <span className="font-bold text-xl text-slate-900">BrainDump</span>
           </Link>
 
           {/* Center: Search Bar */}
