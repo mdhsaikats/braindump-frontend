@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const PlusCircle = ({ className, weight }) => (
 
@@ -305,7 +306,13 @@ const getDifficultyColor = (difficulty) => {
   }
 };
 
-const IdeaCard = ({ idea, onBookmarkToggle }) => {
+
+
+const IdeaCard = ({ idea, onBookmarkToggle, onLikeToggle }) => {
+  const authorName = idea.author_name || idea.author?.name || "anonymous";
+  const avatarUrl = idea.author?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(authorName)}&background=f1f5f9&color=0f172a`;
+  const tags = Array.isArray(idea.tags) ? idea.tags : [];
+
   return (
     <article className="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md hover:border-slate-300 transition-all flex flex-col cursor-pointer group">
       <div className="p-5 flex-1 flex flex-col">
@@ -316,7 +323,7 @@ const IdeaCard = ({ idea, onBookmarkToggle }) => {
           <button
             onClick={(e) => {
               e.stopPropagation();
-              onBookmarkToggle(idea.id);
+              onBookmarkToggle(idea.id, idea.isBookmarked);
             }}
             className={`flex-shrink-0 transition-colors focus:outline-none p-1 -m-1 ${idea.isBookmarked ? "text-teal-600" : "text-slate-400 hover:text-teal-500"}`}
             title={idea.isBookmarked ? "Remove Idea" : "Save Idea"}
@@ -333,9 +340,9 @@ const IdeaCard = ({ idea, onBookmarkToggle }) => {
 
         {/* Tags */}
         <div className="flex flex-wrap items-center gap-2 mt-auto">
-          {idea.tags.map((tag) => (
+          {tags.map((tag, idx) => (
             <span
-              key={tag}
+              key={idx}
               className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200/60"
             >
               {tag}
@@ -348,22 +355,28 @@ const IdeaCard = ({ idea, onBookmarkToggle }) => {
       <div className="px-5 py-3.5 border-t border-slate-100 bg-slate-50/50 rounded-b-xl flex items-center justify-between">
         <div className="flex items-center gap-2 group/author">
           <img
-            src={idea.author.avatar}
-            alt={idea.author.name}
+            src={avatarUrl}
+            alt={authorName}
             className="w-6 h-6 rounded-full ring-2 ring-white"
           />
           <span className="text-sm font-medium text-slate-700 group-hover/author:text-slate-900 transition-colors">
-            @{idea.author.name}
+            @{authorName}
           </span>
         </div>
         <div className="flex items-center gap-4 text-slate-500">
-          <div className="flex items-center gap-1.5 hover:text-teal-600 transition-colors">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onLikeToggle(idea.id);
+            }}
+            className="flex items-center gap-1.5 hover:text-teal-600 transition-colors focus:outline-none"
+          >
             <Heart
-              weight={idea.likes > 100 ? "fill" : "regular"}
-              className={`text-base ${idea.likes > 100 ? "text-teal-600" : ""}`}
+              weight={idea.likes > 0 ? "fill" : "regular"}
+              className={`text-base ${idea.likes > 0 ? "text-teal-600" : ""}`}
             />
-            <span className="text-xs font-medium">{idea.likes}</span>
-          </div>
+            <span className="text-xs font-medium">{idea.likes || 0}</span>
+          </button>
         </div>
       </div>
     </article>
@@ -371,24 +384,97 @@ const IdeaCard = ({ idea, onBookmarkToggle }) => {
 };
 
 const Home = () => {
-  const [ideas, setIdeas] = useState(MOCK_IDEAS);
-  const [selectedTechs, setSelectedTechs] = useState(["React", "Node.js"]);
-  const { openShareModal } = useOutletContext() || {};
+  const [ideas, setIdeas] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const { openShareModal, refreshKey } = useOutletContext() || {};
+  const { token } = useAuth();
 
-  const toggleBookmark = (id) => {
-    setIdeas(
-      ideas.map((idea) =>
-        idea.id === id ? { ...idea, isBookmarked: !idea.isBookmarked } : idea,
-      ),
-    );
+  const fetchAllIdeas = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch("/api/v1/users/idea", {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      const data = await res.json();
+
+      let savedIds = new Set();
+      if (token) {
+        try {
+          const savesRes = await fetch("/api/v1/users/saves", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          const savesData = await savesRes.json();
+          if (savesData.success && Array.isArray(savesData.ideas)) {
+            savesData.ideas.forEach((item) => savedIds.add(item.id));
+          }
+        } catch (e) {
+          console.error("Failed to fetch user saves:", e);
+        }
+      }
+
+      if (data.success && Array.isArray(data.ideas)) {
+        const mappedIdeas = data.ideas.map((item) => ({
+          ...item,
+          isBookmarked: savedIds.has(item.id),
+        }));
+        setIdeas(mappedIdeas);
+      }
+    } catch (err) {
+      console.error("Error fetching ideas:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const toggleTech = (techName) => {
-    setSelectedTechs((prev) =>
-      prev.includes(techName)
-        ? prev.filter((t) => t !== techName)
-        : [...prev, techName],
+  useEffect(() => {
+    fetchAllIdeas();
+  }, [refreshKey, token]);
+
+  const toggleBookmark = async (id, currentlyBookmarked) => {
+    if (!token) return;
+
+    // Optimistic UI update
+    setIdeas((prev) =>
+      prev.map((idea) =>
+        idea.id === id ? { ...idea, isBookmarked: !currentlyBookmarked } : idea
+      )
     );
+
+    try {
+      const method = currentlyBookmarked ? "DELETE" : "POST";
+      await fetch(`/api/v1/users/saves/${id}`, {
+        method,
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    } catch (err) {
+      console.error("Error toggling bookmark:", err);
+      // Revert on error
+      setIdeas((prev) =>
+        prev.map((idea) =>
+          idea.id === id ? { ...idea, isBookmarked: currentlyBookmarked } : idea
+        )
+      );
+    }
+  };
+
+  const toggleLike = async (id) => {
+    if (!token) return;
+
+    // Optimistic UI update
+    setIdeas((prev) =>
+      prev.map((idea) =>
+        idea.id === id ? { ...idea, likes: (idea.likes || 0) + 1 } : idea
+      )
+    );
+
+    try {
+      await fetch(`/api/v1/users/idea/${id}/like`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    } catch (err) {
+      console.error("Error toggling like:", err);
+    }
   };
 
   return (
@@ -409,42 +495,41 @@ const Home = () => {
               >
                 + Share Idea
               </button>
-
-              <button className="lg:hidden inline-flex items-center px-3 py-2 border border-slate-200 shadow-sm text-sm font-medium rounded-lg text-slate-700 bg-white hover:bg-slate-50 transition-colors">
-                <Faders className="mr-2 text-lg" />
-                Filters
-              </button>
-
-              <div className="relative group">
-                <select className="appearance-none block w-full pl-4 pr-10 py-2 text-sm font-medium border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 bg-white text-slate-700 shadow-sm cursor-pointer hover:bg-slate-50 transition-all">
-                  <option>Latest</option>
-                  <option>Popular</option>
-                  <option>Most Discussed</option>
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400 group-hover:text-slate-600 transition-colors">
-                  <CaretDown weight="bold" />
-                </div>
-              </div>
             </div>
           </div>
 
           {/* Idea Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {ideas.map((idea) => (
-              <IdeaCard
-                key={idea.id}
-                idea={idea}
-                onBookmarkToggle={toggleBookmark}
-              />
-            ))}
-          </div>
-
-          {/* Load More Button */}
-          <div className="mt-12 text-center">
-            <button className="inline-flex items-center justify-center px-6 py-2.5 border border-slate-200 shadow-sm text-sm font-medium rounded-lg text-slate-700 bg-white hover:bg-slate-50 hover:border-slate-300 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
-              Load more ideas
-            </button>
-          </div>
+          {loading ? (
+            <div className="flex justify-center items-center py-20 text-slate-500">
+              Loading ideas...
+            </div>
+          ) : ideas.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {ideas.map((idea) => (
+                <IdeaCard
+                  key={idea.id}
+                  idea={idea}
+                  onBookmarkToggle={toggleBookmark}
+                  onLikeToggle={toggleLike}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="bg-white rounded-xl border border-slate-200 p-12 text-center max-w-md mx-auto my-12">
+              <h3 className="text-lg font-semibold text-slate-900 mb-1">
+                No ideas published yet
+              </h3>
+              <p className="text-slate-500 text-sm mb-6">
+                Be the first to share an idea with the community!
+              </p>
+              <button
+                onClick={openShareModal}
+                className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-lg hover:bg-teal-700 transition-colors cursor-pointer"
+              >
+                Share First Idea
+              </button>
+            </div>
+          )}
         </div>
       </main>
     </div>

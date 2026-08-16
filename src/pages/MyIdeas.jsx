@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const Plus = ({ className }) => (
 
@@ -188,41 +189,23 @@ const getStatusColor = (status) => {
   }
 };
 
-const MyIdeaCard = ({ idea, onBookmarkToggle, onDelete }) => {
+
+
+const MyIdeaCard = ({ idea, onDelete }) => {
+  const authorName = idea.author_name || idea.author?.name || "you";
+  const avatarUrl = idea.author?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(authorName)}&background=f1f5f9&color=0f172a`;
+  const tags = Array.isArray(idea.tags) ? idea.tags : [];
+
   return (
     <article className="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md hover:border-slate-300 transition-all flex flex-col cursor-pointer group">
       <div className="p-5 flex-1 flex flex-col">
         <div className="flex justify-between items-start mb-3 gap-4">
           <div>
-            <span
-              className={`inline-block text-xs font-semibold px-2 py-0.5 rounded-full mb-2 ${getStatusColor(
-                idea.status
-              )}`}
-            >
-              {idea.status}
-            </span>
             <h3 className="text-lg font-semibold text-slate-900 leading-snug group-hover:text-teal-600 transition-colors line-clamp-2">
               {idea.title}
             </h3>
           </div>
           <div className="flex items-center gap-1">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onBookmarkToggle(idea.id);
-              }}
-              className={`flex-shrink-0 transition-colors focus:outline-none p-1.5 rounded-lg hover:bg-slate-100 ${
-                idea.isBookmarked
-                  ? "text-teal-600"
-                  : "text-slate-400 hover:text-teal-500"
-              }`}
-              title={idea.isBookmarked ? "Remove Idea" : "Save Idea"}
-            >
-              <BookmarkSimple
-                weight={idea.isBookmarked ? "fill" : "regular"}
-                className="text-lg"
-              />
-            </button>
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -241,9 +224,9 @@ const MyIdeaCard = ({ idea, onBookmarkToggle, onDelete }) => {
 
         {/* Tags */}
         <div className="flex flex-wrap items-center gap-2 mt-auto">
-          {idea.tags.map((tag) => (
+          {tags.map((tag, idx) => (
             <span
-              key={tag}
+              key={idx}
               className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200/60"
             >
               {tag}
@@ -256,21 +239,21 @@ const MyIdeaCard = ({ idea, onBookmarkToggle, onDelete }) => {
       <div className="px-5 py-3.5 border-t border-slate-100 bg-slate-50/50 rounded-b-xl flex items-center justify-between">
         <div className="flex items-center gap-2 group/author">
           <img
-            src={idea.author.avatar}
-            alt={idea.author.name}
+            src={avatarUrl}
+            alt={authorName}
             className="w-6 h-6 rounded-full ring-2 ring-white"
           />
           <span className="text-sm font-medium text-slate-700 group-hover/author:text-slate-900 transition-colors">
-            @{idea.author.name}
+            @{authorName}
           </span>
         </div>
         <div className="flex items-center gap-4 text-slate-500">
           <div className="flex items-center gap-1.5 hover:text-teal-600 transition-colors">
             <Heart
-              weight={idea.likes > 50 ? "fill" : "regular"}
-              className={`text-base ${idea.likes > 50 ? "text-teal-600" : ""}`}
+              weight={idea.likes > 0 ? "fill" : "regular"}
+              className={`text-base ${idea.likes > 0 ? "text-teal-600" : ""}`}
             />
-            <span className="text-xs font-medium">{idea.likes}</span>
+            <span className="text-xs font-medium">{idea.likes || 0}</span>
           </div>
         </div>
       </div>
@@ -279,19 +262,47 @@ const MyIdeaCard = ({ idea, onBookmarkToggle, onDelete }) => {
 };
 
 const MyIdeas = () => {
-  const [ideas, setIdeas] = useState(MOCK_MY_IDEAS);
-  const { openShareModal } = useOutletContext() || {};
+  const [ideas, setIdeas] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const { openShareModal, refreshKey } = useOutletContext() || {};
+  const { token } = useAuth();
 
-  const toggleBookmark = (id) => {
-    setIdeas((prev) =>
-      prev.map((idea) =>
-        idea.id === id ? { ...idea, isBookmarked: !idea.isBookmarked } : idea
-      )
-    );
+  const fetchMyIdeas = async () => {
+    if (!token) return;
+    try {
+      setLoading(true);
+      const res = await fetch("/api/v1/users/my-ideas", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (data.success && Array.isArray(data.ideas)) {
+        setIdeas(data.ideas);
+      }
+    } catch (err) {
+      console.error("Error fetching my ideas:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleDelete = (id) => {
+  useEffect(() => {
+    fetchMyIdeas();
+  }, [refreshKey, token]);
+
+  const handleDelete = async (id) => {
+    if (!token) return;
+
     setIdeas((prev) => prev.filter((idea) => idea.id !== id));
+
+    try {
+      await fetch(`/api/v1/users/idea/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    } catch (err) {
+      console.error("Error deleting idea:", err);
+      fetchMyIdeas(); // Revert/refetch on error
+    }
   };
 
   return (
@@ -304,7 +315,7 @@ const MyIdeas = () => {
               My Ideas
             </h2>
             <p className="text-slate-500 text-sm mt-1">
-              Manage and track the ideas you have submitted or are working on.
+              Manage and track the ideas you have submitted.
             </p>
           </div>
 
@@ -318,13 +329,16 @@ const MyIdeas = () => {
         </div>
 
         {/* Idea Cards Grid */}
-        {ideas.length > 0 ? (
+        {loading ? (
+          <div className="flex justify-center items-center py-20 text-slate-500">
+            Loading your ideas...
+          </div>
+        ) : ideas.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {ideas.map((idea) => (
               <MyIdeaCard
                 key={idea.id}
                 idea={idea}
-                onBookmarkToggle={toggleBookmark}
                 onDelete={handleDelete}
               />
             ))}

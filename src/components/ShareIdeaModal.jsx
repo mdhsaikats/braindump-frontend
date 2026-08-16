@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 const X = ({ className }) => (
   <svg
@@ -31,28 +32,55 @@ const Lightbulb = ({ className }) => (
   </svg>
 );
 
-const ShareIdeaModal = ({ isOpen, onClose }) => {
+
+
+const ShareIdeaModal = ({ isOpen, onClose, onCreated }) => {
+  const { token } = useAuth();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [tags, setTags] = useState("");
-  const [difficulty, setDifficulty] = useState("Intermediate");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting idea:", {
-      title,
-      description,
-      tags: tags.split(",").map((t) => t.trim()),
-      difficulty,
-    });
-    // Clear & close modal
-    setTitle("");
-    setDescription("");
-    setTags("");
-    setDifficulty("Intermediate");
-    onClose();
+    setError("");
+    setIsSubmitting(true);
+
+    try {
+      const formattedTags = tags.split(",").map((t) => t.trim()).filter(Boolean);
+
+      const response = await fetch("/api/v1/users/idea", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title,
+          description,
+          tags: formattedTags,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setTitle("");
+        setDescription("");
+        setTags("");
+        onClose();
+        if (onCreated) onCreated();
+      } else {
+        setError(data.message || data.error || "Failed to publish idea");
+      }
+    } catch (err) {
+      setError("Network error. Failed to publish idea.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -83,6 +111,12 @@ const ShareIdeaModal = ({ isOpen, onClose }) => {
 
         {/* Modal Body / Form */}
         <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-4">
+          {error && (
+            <div className="p-3 bg-rose-50 border border-rose-100 rounded-lg text-rose-700 text-xs font-medium">
+              {error}
+            </div>
+          )}
+
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">
               Idea Title
@@ -135,9 +169,10 @@ const ShareIdeaModal = ({ isOpen, onClose }) => {
             </button>
             <button
               type="submit"
-              className="px-5 py-2 text-sm font-medium text-white bg-slate-900 hover:bg-slate-800 rounded-lg shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-900"
+              disabled={isSubmitting}
+              className="px-5 py-2 text-sm font-medium text-white bg-slate-900 hover:bg-slate-800 rounded-lg shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-900 disabled:opacity-75 flex items-center gap-2"
             >
-              Publish Idea
+              {isSubmitting ? "Publishing..." : "Publish Idea"}
             </button>
           </div>
         </form>

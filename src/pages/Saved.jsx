@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
 
 const BookmarkSimple = ({ className, weight }) => (
   <svg
@@ -132,7 +133,13 @@ const getDifficultyColor = (difficulty) => {
   }
 };
 
+
+
 const SavedIdeaCard = ({ idea, onRemove }) => {
+  const authorName = idea.author_name || idea.author?.name || "anonymous";
+  const avatarUrl = idea.author?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(authorName)}&background=f1f5f9&color=0f172a`;
+  const tags = Array.isArray(idea.tags) ? idea.tags : [];
+
   return (
     <article className="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md hover:border-slate-300 transition-all flex flex-col cursor-pointer group">
       <div className="p-5 flex-1 flex flex-col">
@@ -157,9 +164,9 @@ const SavedIdeaCard = ({ idea, onRemove }) => {
 
         {/* Tags */}
         <div className="flex flex-wrap items-center gap-2 mt-auto">
-          {idea.tags.map((tag) => (
+          {tags.map((tag, idx) => (
             <span
-              key={tag}
+              key={idx}
               className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200/60"
             >
               {tag}
@@ -172,21 +179,21 @@ const SavedIdeaCard = ({ idea, onRemove }) => {
       <div className="px-5 py-3.5 border-t border-slate-100 bg-slate-50/50 rounded-b-xl flex items-center justify-between">
         <div className="flex items-center gap-2 group/author">
           <img
-            src={idea.author.avatar}
-            alt={idea.author.name}
+            src={avatarUrl}
+            alt={authorName}
             className="w-6 h-6 rounded-full ring-2 ring-white"
           />
           <span className="text-sm font-medium text-slate-700 group-hover/author:text-slate-900 transition-colors">
-            @{idea.author.name}
+            @{authorName}
           </span>
         </div>
         <div className="flex items-center gap-4 text-slate-500">
           <div className="flex items-center gap-1.5 hover:text-teal-600 transition-colors">
             <Heart
-              weight={idea.likes > 100 ? "fill" : "regular"}
-              className={`text-base ${idea.likes > 100 ? "text-teal-600" : ""}`}
+              weight={idea.likes > 0 ? "fill" : "regular"}
+              className={`text-base ${idea.likes > 0 ? "text-teal-600" : ""}`}
             />
-            <span className="text-xs font-medium">{idea.likes}</span>
+            <span className="text-xs font-medium">{idea.likes || 0}</span>
           </div>
         </div>
       </div>
@@ -195,10 +202,46 @@ const SavedIdeaCard = ({ idea, onRemove }) => {
 };
 
 const Saved = () => {
-  const [savedIdeas, setSavedIdeas] = useState(MOCK_SAVED_IDEAS);
+  const [savedIdeas, setSavedIdeas] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const { token } = useAuth();
 
-  const handleRemove = (id) => {
+  const fetchSavedIdeas = async () => {
+    if (!token) return;
+    try {
+      setLoading(true);
+      const res = await fetch("/api/v1/users/saves", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (data.success && Array.isArray(data.ideas)) {
+        setSavedIdeas(data.ideas);
+      }
+    } catch (err) {
+      console.error("Error fetching saved ideas:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchSavedIdeas();
+  }, [token]);
+
+  const handleRemove = async (id) => {
+    if (!token) return;
+
     setSavedIdeas((prev) => prev.filter((idea) => idea.id !== id));
+
+    try {
+      await fetch(`/api/v1/users/saves/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    } catch (err) {
+      console.error("Error removing saved idea:", err);
+      fetchSavedIdeas();
+    }
   };
 
   return (
@@ -217,7 +260,11 @@ const Saved = () => {
         </div>
 
         {/* Idea Cards Grid */}
-        {savedIdeas.length > 0 ? (
+        {loading ? (
+          <div className="flex justify-center items-center py-20 text-slate-500">
+            Loading saved ideas...
+          </div>
+        ) : savedIdeas.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {savedIdeas.map((idea) => (
               <SavedIdeaCard
