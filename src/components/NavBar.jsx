@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import { motion } from 'motion/react';
 import { useAuth } from '../context/AuthContext';
 
 const Lightbulb = ({ className }) => (
@@ -22,6 +23,13 @@ const List = ({ className }) => (
     <line x1="40" y1="192" x2="216" y2="192"></line>
   </svg>
 );
+
+const NAV_ITEMS = [
+  { to: "/explore", label: "Explore" },
+  { to: "/my-ideas", label: "My Ideas" },
+  { to: "/saved", label: "Saved" },
+  { to: "/profile", label: "Profile" },
+];
 
 const NavBar = () => {
   const { user, token, logout } = useAuth();
@@ -59,47 +67,31 @@ const NavBar = () => {
           </div>
 
           {/* Right: Links & Auth */}
-          <div className="hidden lg:flex items-center space-x-2 bg-slate-100/80 p-1.5 rounded-full border border-slate-200/60">
-            <NavLink
-              to="/explore"
-              className={({ isActive }) =>
-                `text-sm font-bold px-4 py-2 rounded-full transition-all ${
-                  isActive ? 'bg-black text-white shadow-xs' : 'text-slate-600 hover:text-black'
-                }`
-              }
-            >
-              Explore
-            </NavLink>
-            <NavLink
-              to="/my-ideas"
-              className={({ isActive }) =>
-                `text-sm font-bold px-4 py-2 rounded-full transition-all ${
-                  isActive ? 'bg-black text-white shadow-xs' : 'text-slate-600 hover:text-black'
-                }`
-              }
-            >
-              My Ideas
-            </NavLink>
-            <NavLink 
-              to="/saved" 
-              className={({ isActive }) => 
-                `text-sm font-bold px-4 py-2 rounded-full transition-all ${
-                  isActive ? 'bg-black text-white shadow-xs' : 'text-slate-600 hover:text-black'
-                }`
-              }
-            >
-              Saved
-            </NavLink>
-            <NavLink 
-              to="/profile" 
-              className={({ isActive }) => 
-                `text-sm font-bold px-4 py-2 rounded-full transition-all ${
-                  isActive ? 'bg-black text-white shadow-xs' : 'text-slate-600 hover:text-black'
-                }`
-              }
-            >
-              Profile
-            </NavLink>
+          <div className="hidden lg:flex items-center space-x-1 bg-slate-100/80 p-1.5 rounded-full border border-slate-200/60 relative">
+            {NAV_ITEMS.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className={({ isActive }) =>
+                  `relative text-sm font-extrabold px-4 py-2 rounded-full transition-colors ${
+                    isActive ? 'text-white' : 'text-slate-600 hover:text-black'
+                  }`
+                }
+              >
+                {({ isActive }) => (
+                  <>
+                    {isActive && (
+                      <motion.div
+                        layoutId="navbar-active-pill"
+                        className="absolute inset-0 bg-black rounded-full shadow-xs"
+                        transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                      />
+                    )}
+                    <span className="relative z-10">{item.label}</span>
+                  </>
+                )}
+              </NavLink>
+            ))}
           </div>
           
           <div className="flex items-center gap-4 ml-4">
