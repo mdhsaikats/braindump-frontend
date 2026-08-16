@@ -27,41 +27,45 @@ const NavBar = () => {
   const { user, token, logout } = useAuth();
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
-      <div className="max-w-[1750px] w-full mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+    <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-slate-200/80 shadow-xs">
+      <div className="w-full px-4 sm:px-8 lg:px-12">
+        <div className="flex items-center justify-between h-20">
 
           {/* Left: Logo */}
-          <Link to="/explore" className="flex-shrink-0 flex items-center gap-2 group no-underline">
-            <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white group-hover:bg-brand-600 transition-colors">
-              <Lightbulb weight="bold" className="text-xl" />
-            </div>
-            <span className="font-bold text-xl text-slate-900">BrainDump</span>
+          <Link to="/explore" className="flex-shrink-0 flex items-center gap-3 group no-underline">
+            <img
+              src="/logo/logo.png"
+              alt="BrainDump Logo"
+              className="w-10 h-10 rounded-xl object-contain shadow-xs transition-transform group-hover:scale-105"
+            />
+            <span className="font-extrabold text-2xl tracking-tight text-black">BrainDump</span>
           </Link>
 
           {/* Center: Search Bar */}
-          <div className="hidden md:flex flex-1 justify-center px-8 max-w-2xl">
+          <div className="hidden md:flex flex-1 justify-center px-8 max-w-xl">
             <div className="relative w-full max-w-md group">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 group-focus-within:text-brand-600 transition-colors">
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-black transition-colors">
                 <MagnifyingGlass className="text-lg" />
               </div>
               <input
                 type="text"
-                placeholder="Search ideas..."
-                className="block w-full pl-10 pr-12 py-2 border border-slate-200 rounded-lg leading-5 bg-slate-50 text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 sm:text-sm transition-all shadow-inner"
+                placeholder="Search ideas, technologies..."
+                className="block w-full pl-10 pr-12 py-2.5 border border-slate-200 rounded-xl leading-5 bg-slate-100/70 text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-black/20 focus:border-black text-sm font-medium transition-all shadow-inner"
               />
-              <div className="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
-                <span className="text-xs text-slate-400 border border-slate-200 rounded px-1.5 py-0.5 bg-white">⌘K</span>
+              <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                <span className="text-xs font-bold text-slate-400 border border-slate-200 rounded-md px-1.5 py-0.5 bg-white shadow-2xs">⌘K</span>
               </div>
             </div>
           </div>
 
           {/* Right: Links & Auth */}
-          <div className="hidden lg:flex items-center space-x-6">
+          <div className="hidden lg:flex items-center space-x-2 bg-slate-100/80 p-1.5 rounded-full border border-slate-200/60">
             <NavLink
               to="/explore"
               className={({ isActive }) =>
-                `text-sm font-medium transition-colors ${isActive ? 'text-slate-900 font-semibold' : 'text-slate-600 hover:text-slate-900'}`
+                `text-sm font-bold px-4 py-2 rounded-full transition-all ${
+                  isActive ? 'bg-black text-white shadow-xs' : 'text-slate-600 hover:text-black'
+                }`
               }
             >
               Explore
@@ -69,7 +73,9 @@ const NavBar = () => {
             <NavLink
               to="/my-ideas"
               className={({ isActive }) =>
-                `text-sm font-medium transition-colors ${isActive ? 'text-slate-900 font-semibold' : 'text-slate-600 hover:text-slate-900'}`
+                `text-sm font-bold px-4 py-2 rounded-full transition-all ${
+                  isActive ? 'bg-black text-white shadow-xs' : 'text-slate-600 hover:text-black'
+                }`
               }
             >
               My Ideas
@@ -77,7 +83,9 @@ const NavBar = () => {
             <NavLink 
               to="/saved" 
               className={({ isActive }) => 
-                `text-sm font-medium transition-colors ${isActive ? 'text-slate-900 font-semibold' : 'text-slate-600 hover:text-slate-900'}`
+                `text-sm font-bold px-4 py-2 rounded-full transition-all ${
+                  isActive ? 'bg-black text-white shadow-xs' : 'text-slate-600 hover:text-black'
+                }`
               }
             >
               Saved
@@ -85,22 +93,24 @@ const NavBar = () => {
             <NavLink 
               to="/profile" 
               className={({ isActive }) => 
-                `text-sm font-medium transition-colors ${isActive ? 'text-slate-900 font-semibold' : 'text-slate-600 hover:text-slate-900'}`
+                `text-sm font-bold px-4 py-2 rounded-full transition-all ${
+                  isActive ? 'bg-black text-white shadow-xs' : 'text-slate-600 hover:text-black'
+                }`
               }
             >
               Profile
             </NavLink>
           </div>
           
-          <div className="flex items-center gap-4 ml-6">
+          <div className="flex items-center gap-4 ml-4">
             {token && (
-              <Link to="/profile" className="flex items-center gap-2 group">
+              <Link to="/profile" className="flex items-center gap-2.5 group bg-slate-100 hover:bg-slate-200/80 px-3 py-1.5 rounded-full border border-slate-200/60 transition-colors">
                 <img
-                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user?.username || 'User')}&background=0f172a&color=fff`}
+                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user?.username || 'User')}&background=09090b&color=fff`}
                   alt="Profile"
-                  className="w-8 h-8 rounded-full ring-2 ring-slate-200 group-hover:ring-teal-500 transition-all object-cover"
+                  className="w-7 h-7 rounded-full ring-2 ring-white object-cover"
                 />
-                <span className="hidden sm:inline text-xs font-semibold text-slate-700 group-hover:text-slate-900 transition-colors">
+                <span className="hidden sm:inline text-xs font-bold text-slate-900 group-hover:text-black">
                   @{user?.username}
                 </span>
               </Link>
@@ -108,22 +118,20 @@ const NavBar = () => {
             {token ? (
               <button
                 onClick={logout}
-                className="hidden sm:block text-sm font-medium text-slate-600 hover:text-slate-900 cursor-pointer"
+                className="hidden sm:block text-xs font-bold text-slate-700 hover:text-black px-3.5 py-2 rounded-xl border border-slate-200 hover:bg-slate-100 cursor-pointer transition-all"
               >
                 Logout
               </button>
             ) : (
               <NavLink 
                 to="/login" 
-                className={({ isActive }) => 
-                  `hidden sm:block text-sm font-medium transition-colors ${isActive ? 'text-slate-900 font-semibold' : 'text-slate-600 hover:text-slate-900'}`
-                }
+                className="hidden sm:block text-xs font-bold text-white bg-black hover:bg-slate-800 px-4 py-2 rounded-xl shadow-xs transition-all"
               >
                 Login
               </NavLink>
             )}
             {/* Mobile Menu Button */}
-            <button className="lg:hidden p-2 text-slate-500 hover:text-slate-900">
+            <button className="lg:hidden p-2 text-slate-700 hover:text-black">
               <List className="text-2xl" />
             </button>
           </div>

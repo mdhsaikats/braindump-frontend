@@ -37,125 +37,113 @@ const SideBar = () => {
   };
 
   return (
-    <aside className="hidden lg:block w-64 flex-shrink-0 space-y-8 mt-8 ml-8">
-      {/* Popular Technologies */}
-      <div>
-        <h3 className="text-xs font-semibold text-slate-900 uppercase mb-4">
-          Popular Technologies
-        </h3>
-        <div className="space-y-3">
-          {TECHNOLOGIES.map((tech) => {
-            const isSelected = selectedTechs.includes(tech.name);
-            return (
-              <label
-                key={tech.name}
-                className="flex items-center gap-3 cursor-pointer group"
-              >
-                <div
-                  className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${
-                    isSelected
-                      ? "bg-teal-600 border-teal-600"
-                      : "border-slate-300 bg-white group-hover:border-teal-400"
+    <aside className="hidden lg:block w-72 flex-shrink-0 space-y-6">
+      <div className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-xs space-y-6">
+        {/* Popular Technologies */}
+        <div>
+          <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2">
+            Popular Technologies
+          </h3>
+          <div className="space-y-2">
+            {TECHNOLOGIES.map((tech) => {
+              const isSelected = selectedTechs.includes(tech.name);
+              return (
+                <label
+                  key={tech.name}
+                  className={`flex items-center justify-between p-2.5 rounded-xl cursor-pointer transition-all ${
+                    isSelected ? "bg-black text-white font-bold shadow-xs" : "hover:bg-slate-100 text-slate-700"
                   }`}
                 >
-                  {/* Replaced undefined <Check /> with a standard SVG */}
-                  {isSelected && (
-                    <svg
-                      className="w-3 h-3 text-white"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={3}
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`w-4 h-4 rounded-md border flex items-center justify-center transition-colors ${
+                        isSelected
+                          ? "bg-white border-white"
+                          : "border-slate-300 bg-white"
+                      }`}
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                  )}
-                </div>
-                <input
-                  type="checkbox"
-                  className="hidden"
-                  checked={isSelected}
-                  onChange={() => toggleTech(tech.name)}
-                />
-                <span
-                  className={`text-sm transition-colors ${
-                    isSelected
-                      ? "text-slate-900 font-medium"
-                      : "text-slate-600 group-hover:text-slate-900"
-                  }`}
-                >
-                  {tech.name}
-                </span>
-                <span className="ml-auto text-xs text-slate-400">
-                  {tech.count}
-                </span>
-              </label>
-            );
-          })}
+                      {isSelected && (
+                        <svg
+                          className="w-3 h-3 text-black"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={4}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      )}
+                    </div>
+                    <input
+                      type="checkbox"
+                      className="hidden"
+                      checked={isSelected}
+                      onChange={() => toggleTech(tech.name)}
+                    />
+                    <span className="text-sm font-bold">{tech.name}</span>
+                  </div>
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${isSelected ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500'}`}>
+                    {tech.count}
+                  </span>
+                </label>
+              );
+            })}
+          </div>
         </div>
-        <button className="mt-4 text-sm font-medium text-teal-600 hover:text-teal-700 transition-colors">
-          Show more tags...
-        </button>
-      </div>
 
-      {/* Difficulty Filter */}
-      <div className="pt-6 border-t border-slate-200">
-        <h3 className="text-xs font-semibold text-slate-900 uppercase mb-4">
-          Difficulty
-        </h3>
-        <div className="space-y-3">
-          {DIFFICULTIES.map((diff) => {
-            const isSelected = selectedDiffs.includes(diff);
-            return (
-              <label
-                key={diff}
-                className="flex items-center gap-3 cursor-pointer group"
-              >
-                <div
-                  className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${
-                    isSelected
-                      ? "bg-teal-600 border-teal-600"
-                      : "border-slate-300 bg-white group-hover:border-teal-400"
+        {/* Difficulty Filter */}
+        <div className="pt-4 border-t border-slate-100">
+          <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2">
+            Difficulty Level
+          </h3>
+          <div className="space-y-2">
+            {DIFFICULTIES.map((diff) => {
+              const isSelected = selectedDiffs.includes(diff);
+              return (
+                <label
+                  key={diff}
+                  className={`flex items-center gap-3 p-2.5 rounded-xl cursor-pointer transition-all ${
+                    isSelected ? "bg-black text-white font-bold shadow-xs" : "hover:bg-slate-100 text-slate-700"
                   }`}
                 >
-                  {isSelected && (
-                    <svg
-                      className="w-3 h-3 text-white"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={3}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                  )}
-                </div>
-                <input
-                  type="checkbox"
-                  className="hidden"
-                  checked={isSelected}
-                  onChange={() => toggleDiff(diff)}
-                />
-                <span
-                  className={`text-sm transition-colors ${
-                    isSelected
-                      ? "text-slate-900 font-medium"
-                      : "text-slate-600 group-hover:text-slate-900"
-                  }`}
-                >
-                  {diff}
-                </span>
-              </label>
-            );
-          })}
+                  <div
+                    className={`w-4 h-4 rounded-md border flex items-center justify-center transition-colors ${
+                      isSelected
+                        ? "bg-white border-white"
+                        : "border-slate-300 bg-white"
+                    }`}
+                  >
+                    {isSelected && (
+                      <svg
+                        className="w-3 h-3 text-black"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={4}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    )}
+                  </div>
+                  <input
+                    type="checkbox"
+                    className="hidden"
+                    checked={isSelected}
+                    onChange={() => toggleDiff(diff)}
+                  />
+                  <span className="text-sm font-bold">{diff}</span>
+                </label>
+              );
+            })}
+          </div>
         </div>
       </div>
     </aside>

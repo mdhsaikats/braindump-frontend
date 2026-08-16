@@ -1,18 +1,31 @@
-@import url('https://api.fontshare.com/v2/css?f[]=pally@400,500,700&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&f[]=cabinet-grotesk@900,800,700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: 'Pally', system-ui, -apple-system, sans-serif;
-  --font-pally: 'Pally', system-ui, -apple-system, sans-serif;
-  --color-brand-500: #0d9488;
-  --color-brand-600: #0f766e;
+  --font-sans: 'Satoshi', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Cabinet Grotesk', 'Satoshi', system-ui, sans-serif;
+  --color-brand-500: #09090b;
+  --color-brand-600: #000000;
 }
 
 *, ::before, ::after {
-  letter-spacing: normal !important;
+  letter-spacing: -0.01em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Cabinet Grotesk', 'Satoshi', system-ui, sans-serif;
+  letter-spacing: -0.02em;
 }
 
 body {
-  font-family: 'Pally', system-ui, -apple-system, sans-serif;
-  letter-spacing: normal;
+  font-family: 'Satoshi', system-ui, -apple-system, sans-serif;
+  background-color: #fafafa;
+  color: #09090b;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: #000000;
+  color: #ffffff;
 }

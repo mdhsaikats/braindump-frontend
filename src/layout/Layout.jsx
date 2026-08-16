@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import NavBar from '../components/NavBar';
+import Footer from '../components/Footer';
 import ShareIdeaModal from '../components/ShareIdeaModal';
 
 const Layout = () => {
@@ -12,12 +13,13 @@ const Layout = () => {
   const refreshIdeas = () => setRefreshKey((prev) => prev + 1);
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center">
-      <div className="w-full max-w-[1750px] mx-auto min-h-screen flex flex-col">
+    <div className="min-h-screen bg-slate-50 flex flex-col">
+      <div className="w-full min-h-screen flex flex-col">
         <NavBar />
-        <main className="flex-1 w-full px-4 sm:px-6 lg:px-8 py-6">
+        <main className="flex-1 w-full py-6">
           <Outlet context={{ openShareModal: openModal, refreshKey, refreshIdeas }} />
         </main>
+        <Footer />
       </div>
       <ShareIdeaModal isOpen={isModalOpen} onClose={closeModal} onCreated={refreshIdeas} />
     </div>

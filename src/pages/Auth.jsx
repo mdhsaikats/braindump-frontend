@@ -97,7 +97,7 @@ const Auth = () => {
                 type="text"
                 autocomplete="username"
                 placeholder="mdhsaikats"
-                className="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all font-medium"
+                className="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-black/20 focus:border-black transition-all font-medium"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
@@ -116,7 +116,7 @@ const Auth = () => {
               type="email"
               autocomplete="username"
               placeholder="you@example.com"
-              className="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all font-medium"
+              className="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-black/20 focus:border-black transition-all font-medium"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -133,7 +133,7 @@ const Auth = () => {
                 type="button"
                 tabIndex="-1"
                 onClick={() => setShowPassword(!showPassword)}
-                className="text-xs font-semibold text-teal-600 hover:text-teal-700 focus:outline-none"
+                className="text-xs font-semibold text-slate-900 hover:text-black focus:outline-none"
               >
                 {showPassword ? "Hide" : "Show"}
               </button>
@@ -144,7 +144,7 @@ const Auth = () => {
               type={showPassword ? "text" : "password"}
               autocomplete={isLogin ? "current-password" : "new-password"}
               placeholder="••••••••"
-              className="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all font-medium"
+              className="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-black/20 focus:border-black transition-all font-medium"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -155,7 +155,7 @@ const Auth = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full mt-2 bg-slate-900 text-white font-semibold py-3 rounded-lg hover:bg-slate-800 active:bg-slate-950 transition duration-200 shadow-md hover:shadow-lg disabled:opacity-75 disabled:cursor-not-allowed flex justify-center items-center gap-2"
+            className="w-full mt-2 bg-slate-900 text-white font-semibold py-3 rounded-lg hover:bg-black active:bg-slate-950 transition duration-200 shadow-md hover:shadow-lg disabled:opacity-75 disabled:cursor-not-allowed flex justify-center items-center gap-2"
           >
             {isSubmitting ? (
               <>
@@ -176,7 +176,7 @@ const Auth = () => {
           {isLogin ? "Don't have an account? " : "Already have an account? "}
           <button
             onClick={toggleAuthMode}
-            className="text-teal-600 font-bold hover:underline hover:text-teal-700 focus:outline-none"
+            className="text-black font-bold hover:underline focus:outline-none"
           >
             {isLogin ? "Sign up" : "Log in"}
           </button>

@@ -143,10 +143,10 @@ const SavedIdeaCard = ({ idea, onRemove }) => {
   const tags = Array.isArray(idea.tags) ? idea.tags : [];
 
   return (
-    <article className="bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-teal-500/40 transition-all duration-300 flex flex-col cursor-pointer group overflow-hidden">
+    <article className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-black/40 transition-all duration-300 flex flex-col cursor-pointer group overflow-hidden">
       <div className="p-5 flex-1 flex flex-col">
         <div className="flex justify-between items-start mb-3 gap-3">
-          <h3 className="text-lg font-bold text-slate-900 leading-snug group-hover:text-teal-600 transition-colors line-clamp-2">
+          <h3 className="text-lg font-bold text-slate-900 leading-snug group-hover:text-black transition-colors line-clamp-2">
             {idea.title}
           </h3>
           <button
@@ -154,10 +154,10 @@ const SavedIdeaCard = ({ idea, onRemove }) => {
               e.stopPropagation();
               onRemove(idea.id);
             }}
-            className="flex-shrink-0 text-teal-600 hover:text-rose-600 p-1.5 rounded-lg hover:bg-rose-50 transition-colors focus:outline-none"
+            className="flex-shrink-0 text-slate-900 hover:text-black p-1.5 rounded-lg hover:bg-slate-100 transition-colors focus:outline-none"
             title="Remove from saved"
           >
-            <BookmarkSimple weight="fill" className="text-lg" />
+            <BookmarkSimple weight="fill" className="text-lg text-black" />
           </button>
         </div>
         <p className="text-slate-600 text-sm mb-4 flex-1 line-clamp-3 leading-relaxed">
@@ -169,7 +169,7 @@ const SavedIdeaCard = ({ idea, onRemove }) => {
           {tags.map((tag, idx) => (
             <span
               key={idx}
-              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-teal-50/80 text-teal-700 border border-teal-200/50"
+              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-900 border border-slate-200"
             >
               {tag}
             </span>
@@ -190,10 +190,10 @@ const SavedIdeaCard = ({ idea, onRemove }) => {
           </span>
         </div>
         <div className="flex items-center gap-4 text-slate-500">
-          <div className="flex items-center gap-1.5 text-slate-600">
+          <div className="flex items-center gap-1.5 text-slate-900">
             <Heart
               weight={idea.likes > 0 ? "fill" : "regular"}
-              className={`text-base ${idea.likes > 0 ? "text-rose-500 fill-rose-500" : ""}`}
+              className={`text-base ${idea.likes > 0 ? "text-slate-900 fill-slate-900" : ""}`}
             />
             <span className="text-xs font-semibold">{idea.likes || 0}</span>
           </div>
@@ -248,24 +248,24 @@ const Saved = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans flex flex-col selection:bg-teal-500/30">
-      <main className="flex-grow max-w-[1750px] mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col gap-8">
+      <main className="flex-grow w-full px-4 sm:px-8 lg:px-12 flex flex-col gap-8">
         {/* Page Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2 gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-4 border-b border-slate-200 pb-6">
           <div>
-            <h2 className="text-2xl font-bold text-slate-900">
-              Saved Ideas
+            <h2 className="text-3xl font-extrabold text-slate-950 tracking-tight">
+              Bookmarked & Saved Ideas
             </h2>
-            <p className="text-slate-500 text-sm mt-1">
-              Ideas you have bookmarked to build or reference later.
+            <p className="text-slate-500 text-sm font-medium mt-1">
+              Your personal reading list and project concepts saved for later reference.
             </p>
           </div>
         </div>
 
         {/* Idea Cards Grid */}
         {loading ? (
-          <div className="flex flex-col justify-center items-center py-20 text-teal-600 gap-4">
-            <LoaderGooeyBlobs color="#0d9488" size={16} />
-            <span className="text-sm font-semibold text-slate-500">Loading saved ideas...</span>
+          <div className="flex flex-col justify-center items-center py-20 text-slate-900 gap-4">
+            <LoaderGooeyBlobs color="#000000" size={16} />
+            <span className="text-sm font-semibold text-slate-600">Loading saved ideas...</span>
           </div>
         ) : savedIdeas.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

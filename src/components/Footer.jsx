@@ -15,18 +15,22 @@ const GithubLogo = ({ className }) => (
 
 const Footer = () => {
     return (
-        <footer className="bg-white border-t border-slate-200 mt-auto">
-            <div className="max-w-[1750px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
-                <div className="flex items-center gap-2 text-slate-500">
-                    <Lightbulb className="text-lg" />
-                    <span className="text-sm font-medium">© 2026 DevIdeas. Built for developers.</span>
+        <footer className="bg-white border-t border-slate-200/80 mt-auto py-8">
+            <div className="w-full px-4 sm:px-8 lg:px-12 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-3 text-slate-700">
+                    <img
+                      src="/logo/logo.png"
+                      alt="BrainDump Logo"
+                      className="w-7 h-7 rounded-lg object-contain"
+                    />
+                    <span className="text-sm font-bold">© 2026 BrainDump. Built for developers worldwide.</span>
                 </div>
-                <div className="flex gap-6 text-sm text-slate-500">
-                    <a href="#" className="hover:text-slate-900 transition-colors">About</a>
-                    <a href="#" className="hover:text-slate-900 transition-colors">Terms</a>
-                    <a href="#" className="hover:text-slate-900 transition-colors">Privacy</a>
-                    <a href="#" className="hover:text-slate-900 transition-colors flex items-center gap-1">
-                        <GithubLogo className="text-lg" />
+                <div className="flex items-center gap-6 text-sm font-bold text-slate-600">
+                    <a href="#" className="hover:text-black transition-colors">About</a>
+                    <a href="#" className="hover:text-black transition-colors">Terms</a>
+                    <a href="#" className="hover:text-black transition-colors">Privacy</a>
+                    <a href="#" className="hover:text-black transition-colors flex items-center gap-1.5">
+                        <GithubLogo className="text-lg text-black" />
                         GitHub
                     </a>
                 </div>

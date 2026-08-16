@@ -90,9 +90,11 @@ const ShareIdeaModal = ({ isOpen, onClose, onCreated }) => {
         {/* Modal Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/50">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 bg-teal-500/10 text-teal-600 rounded-lg flex items-center justify-center">
-              <Lightbulb className="text-xl" />
-            </div>
+            <img
+              src="/logo/logo.png"
+              alt="BrainDump Logo"
+              className="w-8 h-8 rounded-lg object-contain"
+            />
             <div>
               <h3 className="text-lg font-bold text-slate-900 leading-tight">
                 Share an Idea
@@ -128,7 +130,7 @@ const ShareIdeaModal = ({ isOpen, onClose, onCreated }) => {
               placeholder="e.g. AI-powered Code Reviewer"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-black/20 focus:border-black transition-all"
             />
           </div>
 
@@ -142,7 +144,7 @@ const ShareIdeaModal = ({ isOpen, onClose, onCreated }) => {
               placeholder="Briefly describe what this project is about, key features, and problem it solves..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all resize-none"
+              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-black/20 focus:border-black transition-all resize-none"
             />
           </div>
 
@@ -155,7 +157,7 @@ const ShareIdeaModal = ({ isOpen, onClose, onCreated }) => {
               placeholder="e.g. React, Go, Docker"
               value={tags}
               onChange={(e) => setTags(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-black/20 focus:border-black transition-all"
             />
           </div>
 

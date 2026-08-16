@@ -3,6 +3,7 @@ import { useOutletContext } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { API_BASE_URL } from "../config/api";
 import LoaderGooeyBlobs from "../components/ui/loaders-gooey-blobs";
+import SideBar from "../components/SideBar";
 
 const PlusCircle = ({ className, weight }) => (
 
@@ -316,10 +317,10 @@ const IdeaCard = ({ idea, onBookmarkToggle, onLikeToggle }) => {
   const tags = Array.isArray(idea.tags) ? idea.tags : [];
 
   return (
-    <article className="bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-teal-500/40 transition-all duration-300 flex flex-col cursor-pointer group overflow-hidden">
+    <article className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-black/40 transition-all duration-300 flex flex-col cursor-pointer group overflow-hidden">
       <div className="p-5 flex-1 flex flex-col">
         <div className="flex justify-between items-start mb-3 gap-3">
-          <h3 className="text-lg font-bold text-slate-900 leading-snug group-hover:text-teal-600 transition-colors line-clamp-2">
+          <h3 className="text-lg font-bold text-slate-900 leading-snug group-hover:text-black transition-colors line-clamp-2">
             {idea.title}
           </h3>
           <button
@@ -327,7 +328,7 @@ const IdeaCard = ({ idea, onBookmarkToggle, onLikeToggle }) => {
               e.stopPropagation();
               onBookmarkToggle(idea.id, idea.isBookmarked);
             }}
-            className={`flex-shrink-0 transition-all focus:outline-none p-1.5 rounded-lg hover:bg-slate-100 ${idea.isBookmarked ? "text-teal-600 bg-teal-50" : "text-slate-400 hover:text-teal-500"}`}
+            className={`flex-shrink-0 transition-all focus:outline-none p-1.5 rounded-lg hover:bg-slate-100 ${idea.isBookmarked ? "text-black bg-slate-100" : "text-slate-400 hover:text-black"}`}
             title={idea.isBookmarked ? "Remove Idea" : "Save Idea"}
           >
             <BookmarkSimple
@@ -345,7 +346,7 @@ const IdeaCard = ({ idea, onBookmarkToggle, onLikeToggle }) => {
           {tags.map((tag, idx) => (
             <span
               key={idx}
-              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-teal-50/80 text-teal-700 border border-teal-200/50"
+              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-900 border border-slate-200"
             >
               {tag}
             </span>
@@ -480,20 +481,25 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans flex flex-col selection:bg-teal-500/30">
-      <main className="flex-grow max-w-[1750px] mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col lg:flex-row gap-10">
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans flex flex-col pt-4">
+      <main id="explore-ideas" className="flex-grow w-full px-4 sm:px-8 lg:px-12 flex flex-col lg:flex-row gap-10">
         {/* Main Content Area */}
         <div className="flex-1 min-w-0">
           {/* Feed Header & Controls */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
-            <h2 className="text-2xl font-bold text-slate-900">
-              Latest Ideas
-            </h2>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 border-b border-slate-200 pb-4">
+            <div>
+              <h2 className="text-3xl font-extrabold text-slate-950 tracking-tight">
+                Latest Community Ideas
+              </h2>
+              <p className="text-sm font-medium text-slate-500 mt-1">
+                Browse project concepts submitted by fellow engineers.
+              </p>
+            </div>
 
             <div className="flex items-center gap-3">
               <button
                 onClick={openShareModal}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-slate-900 hover:bg-slate-800 shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-900 cursor-pointer"
+                className="inline-flex items-center px-4 py-2.5 rounded-xl text-sm font-extrabold text-white bg-black hover:bg-slate-800 shadow-sm transition-all cursor-pointer"
               >
                 + Share Idea
               </button>
@@ -502,12 +508,12 @@ const Home = () => {
 
           {/* Idea Cards Grid */}
           {loading ? (
-            <div className="flex flex-col justify-center items-center py-20 text-teal-600 gap-4">
-              <LoaderGooeyBlobs color="#0d9488" size={16} />
-              <span className="text-sm font-semibold text-slate-500">Loading ideas...</span>
+            <div className="flex flex-col justify-center items-center py-24 text-slate-900 gap-4">
+              <LoaderGooeyBlobs color="#000000" size={18} />
+              <span className="text-base font-extrabold text-slate-700">Loading ideas feed...</span>
             </div>
           ) : ideas.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-16">
               {ideas.map((idea) => (
                 <IdeaCard
                   key={idea.id}
@@ -518,8 +524,8 @@ const Home = () => {
               ))}
             </div>
           ) : (
-            <div className="bg-white rounded-xl border border-slate-200 p-12 text-center max-w-md mx-auto my-12">
-              <h3 className="text-lg font-semibold text-slate-900 mb-1">
+            <div className="bg-white rounded-3xl border border-slate-200 p-12 text-center max-w-md mx-auto my-12 shadow-sm">
+              <h3 className="text-xl font-bold text-slate-900 mb-1">
                 No ideas published yet
               </h3>
               <p className="text-slate-500 text-sm mb-6">
@@ -527,13 +533,16 @@ const Home = () => {
               </p>
               <button
                 onClick={openShareModal}
-                className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-lg hover:bg-teal-700 transition-colors cursor-pointer"
+                className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-extrabold text-white bg-black rounded-xl hover:bg-slate-800 transition-colors cursor-pointer"
               >
                 Share First Idea
               </button>
             </div>
           )}
         </div>
+
+        {/* Filter Sidebar */}
+        <SideBar />
       </main>
     </div>
   );

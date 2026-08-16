@@ -79,7 +79,7 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans flex flex-col selection:bg-teal-500/30">
-      <main className="flex-grow max-w-[1750px] mx-auto px-4 sm:px-6 lg:px-8 w-full py-6">
+      <main className="flex-grow w-full px-4 sm:px-8 lg:px-12 py-6">
         
         {/* Profile Header */}
         <div className="mb-8">
@@ -132,7 +132,7 @@ const Profile = () => {
                   required
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="block w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all font-medium"
+                  className="block w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-black/20 focus:border-black transition-all font-medium"
                 />
               </div>
               <p className="text-xs text-slate-400 mt-1.5">
@@ -154,7 +154,7 @@ const Profile = () => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all font-medium"
+                  className="block w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-black/20 focus:border-black transition-all font-medium"
                 />
               </div>
             </div>
@@ -169,14 +169,14 @@ const Profile = () => {
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 placeholder="Tell us a bit about yourself..."
-                className="block w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all resize-none"
+                className="block w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-black/20 focus:border-black transition-all resize-none"
               />
             </div>
 
             {/* Form Action Buttons */}
             <div className="flex items-center justify-between pt-4 border-t border-slate-100">
               {isSaved ? (
-                <div className="flex items-center text-teal-600 text-sm font-medium animate-fadeIn">
+                <div className="flex items-center text-slate-900 text-sm font-bold animate-fadeIn">
                   <Check className="mr-1.5 text-lg" />
                   Profile saved successfully!
                 </div>
