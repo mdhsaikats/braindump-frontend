@@ -198,11 +198,11 @@ const MyIdeaCard = ({ idea, onDelete }) => {
   const tags = Array.isArray(idea.tags) ? idea.tags : [];
 
   return (
-    <article className="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md hover:border-slate-300 transition-all flex flex-col cursor-pointer group">
+    <article className="bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-teal-500/40 transition-all duration-300 flex flex-col cursor-pointer group overflow-hidden">
       <div className="p-5 flex-1 flex flex-col">
-        <div className="flex justify-between items-start mb-3 gap-4">
+        <div className="flex justify-between items-start mb-3 gap-3">
           <div>
-            <h3 className="text-lg font-semibold text-slate-900 leading-snug group-hover:text-teal-600 transition-colors line-clamp-2">
+            <h3 className="text-lg font-bold text-slate-900 leading-snug group-hover:text-teal-600 transition-colors line-clamp-2">
               {idea.title}
             </h3>
           </div>
@@ -224,11 +224,11 @@ const MyIdeaCard = ({ idea, onDelete }) => {
         </p>
 
         {/* Tags */}
-        <div className="flex flex-wrap items-center gap-2 mt-auto">
+        <div className="flex flex-wrap items-center gap-1.5 mt-auto">
           {tags.map((tag, idx) => (
             <span
               key={idx}
-              className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200/60"
+              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-teal-50/80 text-teal-700 border border-teal-200/50"
             >
               {tag}
             </span>
@@ -237,14 +237,14 @@ const MyIdeaCard = ({ idea, onDelete }) => {
       </div>
 
       {/* Card Footer */}
-      <div className="px-5 py-3.5 border-t border-slate-100 bg-slate-50/50 rounded-b-xl flex items-center justify-between">
+      <div className="px-5 py-3 border-t border-slate-100 bg-slate-50/60 flex items-center justify-between">
         <div className="flex items-center gap-2 group/author">
           <img
             src={avatarUrl}
             alt={authorName}
-            className="w-6 h-6 rounded-full ring-2 ring-white"
+            className="w-6 h-6 rounded-full ring-2 ring-white shadow-xs"
           />
-          <span className="text-sm font-medium text-slate-700 group-hover/author:text-slate-900 transition-colors">
+          <span className="text-xs font-semibold text-slate-700 group-hover/author:text-slate-900 transition-colors">
             @{authorName}
           </span>
         </div>
@@ -335,7 +335,7 @@ const MyIdeas = () => {
             Loading your ideas...
           </div>
         ) : ideas.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {ideas.map((idea) => (
               <MyIdeaCard
                 key={idea.id}
