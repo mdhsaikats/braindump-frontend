@@ -1,13 +1,21 @@
-@import url('https://api.fontshare.com/v2/css?f[]=tanker@400&display=swap');
+@font-face {
+  font-family: 'Matcha Mint';
+  src: url('/font/Matcha Mint.ttf') format('truetype'),
+       url('/font/Matcha Mint.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @import "tailwindcss";
 
 @theme {
-  --font-sans: 'Tanker', system-ui, -apple-system, sans-serif;
-  --font-tanker: 'Tanker', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Matcha Mint', system-ui, -apple-system, sans-serif;
+  --font-matcha: 'Matcha Mint', system-ui, -apple-system, sans-serif;
   --color-brand-500: #0d9488;
   --color-brand-600: #0f766e;
 }
 
 body {
-  font-family: 'Tanker', system-ui, -apple-system, sans-serif;
+  font-family: 'Matcha Mint', system-ui, -apple-system, sans-serif;
 }
