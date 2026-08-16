@@ -16,7 +16,7 @@ const GithubLogo = ({ className }) => (
 const Footer = () => {
     return (
         <footer className="bg-white border-t border-slate-200 mt-auto">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="max-w-[1750px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-2 text-slate-500">
                     <Lightbulb className="text-lg" />
                     <span className="text-sm font-medium">© 2026 DevIdeas. Built for developers.</span>

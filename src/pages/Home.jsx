@@ -480,7 +480,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans flex flex-col selection:bg-teal-500/30">
-      <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col lg:flex-row gap-10">
+      <main className="flex-grow max-w-[1750px] mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col lg:flex-row gap-10">
         {/* Main Content Area */}
         <div className="flex-1 min-w-0">
           {/* Feed Header & Controls */}
