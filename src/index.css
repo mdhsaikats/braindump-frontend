@@ -1,7 +1,7 @@
 @font-face {
-  font-family: 'Matcha Mint';
-  src: url('/font/Matcha Mint.ttf') format('truetype'),
-       url('/font/Matcha Mint.otf') format('opentype');
+  font-family: 'Narnia';
+  src: url('/font/Narnia.ttf') format('truetype'),
+       url('/font/Narnia.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -10,8 +10,8 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: 'Matcha Mint', system-ui, -apple-system, sans-serif;
-  --font-matcha: 'Matcha Mint', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Narnia', system-ui, -apple-system, sans-serif;
+  --font-narnia: 'Narnia', system-ui, -apple-system, sans-serif;
   --color-brand-500: #0d9488;
   --color-brand-600: #0f766e;
 }
@@ -21,6 +21,6 @@
 }
 
 body {
-  font-family: 'Matcha Mint', system-ui, -apple-system, sans-serif;
+  font-family: 'Narnia', system-ui, -apple-system, sans-serif;
   letter-spacing: normal;
 }
