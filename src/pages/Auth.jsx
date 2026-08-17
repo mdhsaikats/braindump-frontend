@@ -61,11 +61,11 @@ const Auth = () => {
         
         {/* Brand/Header */}
         <div className="flex flex-col items-center mb-8">
-          <div className="w-12 h-12 bg-slate-900 rounded-xl flex items-center justify-center text-white mb-3 shadow-md">
-            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 256 256">
-              <path d="M235.91,91.86,220,44.15a16,16,0,0,0-10.22-10.22l-47.71-15.9a15.91,15.91,0,0,0-16.14,4.24l-89.65,89.65a15.9,15.9,0,0,0-4.24,16.14l15.9,47.71A16,16,0,0,0,78.15,186l47.71,15.9a15.9,15.9,0,0,0,16.14-4.24l89.65-89.65A15.91,15.91,0,0,0,235.91,91.86ZM184,88a12,12,0,1,1,12-12A12,12,0,0,1,184,88Zm-32,32a12,12,0,1,1,12-12A12,12,0,0,1,152,120Z"></path>
-            </svg>
-          </div>
+          <img
+            src="/logo/logo.png"
+            alt="BrainDump Logo"
+            className="w-14 h-14 rounded-2xl object-contain mb-3 shadow-xs hover:scale-105 transition-transform"
+          />
           <h1 className="text-2xl font-bold text-slate-900">BrainDump</h1>
           <p className="text-sm text-slate-500 mt-1">
             {isLogin ? "Sign in to access your ideas" : "Get started with your free account"}
