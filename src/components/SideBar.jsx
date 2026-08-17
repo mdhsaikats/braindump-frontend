@@ -31,7 +31,7 @@ const SideBar = () => {
 
   return (
     <aside className="hidden lg:block w-72 flex-shrink-0">
-      <div className="bg-white rounded-3xl border border-slate-200/80 p-3 shadow-sm overflow-hidden sticky top-24">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 p-3 shadow-sm overflow-hidden sticky top-24 transition-colors">
         {currentPoster && (
           <img
             src={currentPoster}

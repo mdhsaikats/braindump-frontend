@@ -70,14 +70,14 @@ const ShareIdeaModal = ({ isOpen, onClose, onCreated }) => {
   return createPortal(
     <div
       onClick={onClose}
-      className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-fadeIn"
+      className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-md animate-fadeIn"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-lg max-h-[90vh] bg-white rounded-3xl border border-slate-200 shadow-2xl overflow-y-auto transform transition-all my-auto"
+        className="w-full max-w-lg max-h-[90vh] bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl overflow-y-auto transform transition-all my-auto text-slate-900 dark:text-slate-100"
       >
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
           <div className="flex items-center gap-2.5">
             <img
               src="/logo/logo.png"
@@ -85,17 +85,17 @@ const ShareIdeaModal = ({ isOpen, onClose, onCreated }) => {
               className="w-8 h-8 rounded-lg object-contain"
             />
             <div>
-              <h3 className="text-lg font-bold text-slate-900 leading-tight">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white leading-tight">
                 Share an Idea
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 Inspire others with your next big concept
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition-colors focus:outline-none"
+            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none cursor-pointer"
           >
             <X className="text-lg" />
           </button>
@@ -104,13 +104,13 @@ const ShareIdeaModal = ({ isOpen, onClose, onCreated }) => {
         {/* Modal Body / Form */}
         <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-4">
           {error && (
-            <div className="p-3 bg-rose-50 border border-rose-100 rounded-lg text-rose-700 text-xs font-medium">
+            <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-100 dark:border-rose-900/50 rounded-lg text-rose-700 dark:text-rose-300 text-xs font-medium">
               {error}
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">
+            <label className="block text-xs font-semibold uppercase text-slate-500 dark:text-slate-400 mb-1.5">
               Idea Title
             </label>
             <input
@@ -119,12 +119,12 @@ const ShareIdeaModal = ({ isOpen, onClose, onCreated }) => {
               placeholder="e.g. AI-powered Code Reviewer"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-black/20 focus:border-black transition-all"
+              className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-black/20 dark:focus:ring-white/20 focus:border-black dark:focus:border-white transition-all"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">
+            <label className="block text-xs font-semibold uppercase text-slate-500 dark:text-slate-400 mb-1.5">
               Description
             </label>
             <textarea
@@ -133,12 +133,12 @@ const ShareIdeaModal = ({ isOpen, onClose, onCreated }) => {
               placeholder="Briefly describe what this project is about, key features, and problem it solves..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-black/20 focus:border-black transition-all resize-none"
+              className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-black/20 dark:focus:ring-white/20 focus:border-black dark:focus:border-white transition-all resize-none"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">
+            <label className="block text-xs font-semibold uppercase text-slate-500 dark:text-slate-400 mb-1.5">
               Technologies (comma separated)
             </label>
             <input
@@ -146,23 +146,23 @@ const ShareIdeaModal = ({ isOpen, onClose, onCreated }) => {
               placeholder="e.g. React, Go, Docker"
               value={tags}
               onChange={(e) => setTags(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-black/20 focus:border-black transition-all"
+              className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-black/20 dark:focus:ring-white/20 focus:border-black dark:focus:border-white transition-all"
             />
           </div>
 
           {/* Modal Footer Buttons */}
-          <div className="flex items-center justify-end gap-3 mt-4 pt-4 border-t border-slate-100">
+          <div className="flex items-center justify-end gap-3 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+              className="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-5 py-2 text-sm font-medium text-white bg-slate-900 hover:bg-slate-800 rounded-lg shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-900 disabled:opacity-75 flex items-center gap-2"
+              className="px-5 py-2 text-sm font-medium text-white dark:text-black bg-slate-900 dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-200 rounded-lg shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-900 dark:focus:ring-white disabled:opacity-75 flex items-center gap-2 cursor-pointer"
             >
               {isSubmitting ? "Publishing..." : "Publish Idea"}
             </button>

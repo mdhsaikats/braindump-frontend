@@ -9,25 +9,25 @@ import About from "./pages/About";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import { AuthProvider } from "./context/AuthContext";
+import { ThemeProvider } from "./context/ThemeContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 
-
 const Placeholder = ({ title }) => (
-  <div className="flex flex-col items-center justify-center min-h-[60vh] text-slate-800">
+  <div className="flex flex-col items-center justify-center min-h-[60vh] text-slate-800 dark:text-slate-200">
     <h2 className="text-2xl font-bold mb-2">{title} Page</h2>
-    <p className="text-slate-500">This page is under construction.</p>
+    <p className="text-slate-500 dark:text-slate-400">This page is under construction.</p>
   </div>
 );
 
 const NotFound = () => (
-  <div className="flex flex-col items-center justify-center min-h-[60vh] text-slate-800">
-    <h2 className="text-3xl font-extrabold mb-2 text-rose-600">404</h2>
-    <p className="text-slate-500 mb-4">
+  <div className="flex flex-col items-center justify-center min-h-[60vh] text-slate-800 dark:text-slate-200">
+    <h2 className="text-3xl font-extrabold mb-2 text-rose-600 dark:text-rose-500">404</h2>
+    <p className="text-slate-500 dark:text-slate-400 mb-4">
       Oops! The page you are looking for doesn't exist.
     </p>
     <a
       href="/"
-      className="px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors"
+      className="px-4 py-2 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-lg hover:bg-slate-800 dark:hover:bg-white transition-colors"
     >
       Go Home
     </a>
@@ -93,9 +93,11 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

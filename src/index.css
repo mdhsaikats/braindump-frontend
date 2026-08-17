@@ -24,26 +24,28 @@ h6 {
   letter-spacing: -0.02em;
 }
 
+@variant dark (&:where(.dark, .dark *));
+
 body {
   font-family: 'Satoshi', system-ui, -apple-system, sans-serif;
   background-color: #fafafa;
   color: #09090b;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: filter 0.3s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 html.dark body {
-  filter: invert(100%);
-}
-
-html.dark img,
-html.dark video,
-html.dark iframe {
-  filter: invert(100%);
+  background-color: #09090b;
+  color: #f8fafc;
 }
 
 ::selection {
   background-color: #000000;
   color: #ffffff;
 }
+
+html.dark ::selection {
+  background-color: #ffffff;
+  color: #000000;
+}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Github = ({ className = "w-5 h-5 text-black" }) => (
+const Github = ({ className = "w-5 h-5 text-black dark:text-white" }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
@@ -21,9 +21,9 @@ const Github = ({ className = "w-5 h-5 text-black" }) => (
 
 const Footer = () => {
     return (
-        <footer className="bg-white border-t border-slate-200/80 mt-auto py-8">
+        <footer className="bg-white dark:bg-slate-900 border-t border-slate-200/80 dark:border-slate-800 mt-auto py-8 transition-colors duration-200">
             <div className="w-full px-4 sm:px-8 lg:px-12 flex flex-col md:flex-row items-center justify-between gap-4">
-                <div className="flex items-center gap-3 text-slate-700">
+                <div className="flex items-center gap-3 text-slate-700 dark:text-slate-300">
                     <img
                       src="/logo/logo.png"
                       alt="BrainDump Logo"
@@ -31,18 +31,18 @@ const Footer = () => {
                     />
                     <span className="text-sm font-bold">© 2026 BrainDump. Built for developers worldwide.</span>
                 </div>
-                <div className="flex items-center gap-6 text-sm font-bold text-slate-600">
-                    <Link to="/about" className="hover:text-black transition-colors">About</Link>
-                    <Link to="/terms" className="hover:text-black transition-colors">Terms</Link>
-                    <Link to="/privacy" className="hover:text-black transition-colors">Privacy</Link>
+                <div className="flex items-center gap-6 text-sm font-bold text-slate-600 dark:text-slate-400">
+                    <Link to="/about" className="hover:text-black dark:hover:text-white transition-colors">About</Link>
+                    <Link to="/terms" className="hover:text-black dark:hover:text-white transition-colors">Terms</Link>
+                    <Link to="/privacy" className="hover:text-black dark:hover:text-white transition-colors">Privacy</Link>
                     <a
                       href="https://github.com/mdhsaikats/braindump-frontend"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="hover:text-black transition-transform transform hover:scale-110 p-1"
+                      className="hover:text-black dark:hover:text-white transition-transform transform hover:scale-110 p-1"
                       aria-label="GitHub Repository"
                     >
-                        <Github className="w-5 h-5 text-black" />
+                        <Github className="w-5 h-5 text-black dark:text-white" />
                     </a>
                 </div>
             </div>
@@ -50,4 +50,4 @@ const Footer = () => {
     )
 }
 
-export default Footer
+export default Footer;
