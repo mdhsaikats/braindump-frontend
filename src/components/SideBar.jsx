@@ -1,150 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
+// Dynamically import all image files in the /public/poster directory via Vite glob
+const posterModules = import.meta.glob("/public/poster/*", {
+  eager: true,
+  query: "?url",
+  import: "default",
+});
+
+const POSTER_PATHS = Object.keys(posterModules).map((path) =>
+  path.replace(/^\/public/, "")
+);
+
+const FALLBACK_POSTERS = [
+  "/poster/b82b4b1f422dca75dd48fa738a75cb95.jpg",
+  "/poster/download.png",
+  "/poster/poster-1.jpg",
+];
+
+const ALL_POSTERS = POSTER_PATHS.length > 0 ? POSTER_PATHS : FALLBACK_POSTERS;
 
 const SideBar = () => {
-  // 1. Fixed data structure to match your JSX (objects instead of strings)
-  const TECHNOLOGIES = [
-    { name: "JavaScript", count: 142 },
-    { name: "React", count: 98 },
-    { name: "Node.js", count: 76 },
-    { name: "Express", count: 45 },
-    { name: "Go", count: 32 },
-    { name: "PostgreSQL", count: 67 },
-  ];
+  const [currentPoster, setCurrentPoster] = useState("");
 
-  // 2. Added missing DIFFICULTIES array
-  const DIFFICULTIES = ["Beginner", "Intermediate", "Advanced", "Expert"];
-
-  // 3. Added state to manage selected checkboxes
-  const [selectedTechs, setSelectedTechs] = useState([]);
-  const [selectedDiffs, setSelectedDiffs] = useState([]);
-
-  // 4. Added toggle handler for technologies
-  const toggleTech = (techName) => {
-    setSelectedTechs((prev) =>
-      prev.includes(techName)
-        ? prev.filter((name) => name !== techName)
-        : [...prev, techName],
-    );
-  };
-
-  // Added toggle handler for difficulties to make the second section work
-  const toggleDiff = (diffName) => {
-    setSelectedDiffs((prev) =>
-      prev.includes(diffName)
-        ? prev.filter((name) => name !== diffName)
-        : [...prev, diffName],
-    );
-  };
+  useEffect(() => {
+    if (ALL_POSTERS.length > 0) {
+      const randomIndex = Math.floor(Math.random() * ALL_POSTERS.length);
+      setCurrentPoster(ALL_POSTERS[randomIndex]);
+    }
+  }, []);
 
   return (
-    <aside className="hidden lg:block w-72 flex-shrink-0 space-y-6">
-      <div className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-xs space-y-6">
-        {/* Popular Technologies */}
-        <div>
-          <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2">
-            Popular Technologies
-          </h3>
-          <div className="space-y-2">
-            {TECHNOLOGIES.map((tech) => {
-              const isSelected = selectedTechs.includes(tech.name);
-              return (
-                <label
-                  key={tech.name}
-                  className={`flex items-center justify-between p-2.5 rounded-xl cursor-pointer transition-all ${
-                    isSelected ? "bg-black text-white font-bold shadow-xs" : "hover:bg-slate-100 text-slate-700"
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`w-4 h-4 rounded-md border flex items-center justify-center transition-colors ${
-                        isSelected
-                          ? "bg-white border-white"
-                          : "border-slate-300 bg-white"
-                      }`}
-                    >
-                      {isSelected && (
-                        <svg
-                          className="w-3 h-3 text-black"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth={4}
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
-                      )}
-                    </div>
-                    <input
-                      type="checkbox"
-                      className="hidden"
-                      checked={isSelected}
-                      onChange={() => toggleTech(tech.name)}
-                    />
-                    <span className="text-sm font-bold">{tech.name}</span>
-                  </div>
-                  <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${isSelected ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500'}`}>
-                    {tech.count}
-                  </span>
-                </label>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Difficulty Filter */}
-        <div className="pt-4 border-t border-slate-100">
-          <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2">
-            Difficulty Level
-          </h3>
-          <div className="space-y-2">
-            {DIFFICULTIES.map((diff) => {
-              const isSelected = selectedDiffs.includes(diff);
-              return (
-                <label
-                  key={diff}
-                  className={`flex items-center gap-3 p-2.5 rounded-xl cursor-pointer transition-all ${
-                    isSelected ? "bg-black text-white font-bold shadow-xs" : "hover:bg-slate-100 text-slate-700"
-                  }`}
-                >
-                  <div
-                    className={`w-4 h-4 rounded-md border flex items-center justify-center transition-colors ${
-                      isSelected
-                        ? "bg-white border-white"
-                        : "border-slate-300 bg-white"
-                    }`}
-                  >
-                    {isSelected && (
-                      <svg
-                        className="w-3 h-3 text-black"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={4}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                    )}
-                  </div>
-                  <input
-                    type="checkbox"
-                    className="hidden"
-                    checked={isSelected}
-                    onChange={() => toggleDiff(diff)}
-                  />
-                  <span className="text-sm font-bold">{diff}</span>
-                </label>
-              );
-            })}
-          </div>
-        </div>
+    <aside className="hidden lg:block w-72 flex-shrink-0">
+      <div className="bg-white rounded-3xl border border-slate-200/80 p-3 shadow-sm overflow-hidden sticky top-24">
+        {currentPoster && (
+          <img
+            src={currentPoster}
+            alt="BrainDump Vertical Poster"
+            className="w-full h-auto max-h-[620px] rounded-2xl object-cover shadow-xs transition-all hover:scale-[1.01]"
+          />
+        )}
       </div>
     </aside>
   );
