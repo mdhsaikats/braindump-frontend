@@ -1,35 +1,8 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { motion } from 'motion/react';
+import { Search, Menu, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-
-const Lightbulb = ({ className }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256" className={className}>
-    <path d="M235.91,91.86,220,44.15a16,16,0,0,0-10.22-10.22l-47.71-15.9a15.91,15.91,0,0,0-16.14,4.24l-89.65,89.65a15.9,15.9,0,0,0-4.24,16.14l15.9,47.71A16,16,0,0,0,78.15,186l47.71,15.9a15.9,15.9,0,0,0,16.14-4.24l89.65-89.65A15.91,15.91,0,0,0,235.91,91.86ZM184,88a12,12,0,1,1,12-12A12,12,0,0,1,184,88Zm-32,32a12,12,0,1,1,12-12A12,12,0,0,1,152,120Z"></path>
-  </svg>
-);
-
-const MagnifyingGlass = ({ className }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="16" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 256 256" className={className}>
-    <circle cx="112" cy="112" r="80"></circle>
-    <line x1="216" y1="216" x2="168.6" y2="168.6"></line>
-  </svg>
-);
-
-const List = ({ className }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="16" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 256 256" className={className}>
-    <line x1="40" y1="128" x2="216" y2="128"></line>
-    <line x1="40" y1="64" x2="216" y2="64"></line>
-    <line x1="40" y1="192" x2="216" y2="192"></line>
-  </svg>
-);
-
-const XIcon = ({ className }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="20" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 256 256" className={className}>
-    <line x1="200" y1="56" x2="56" y2="200"></line>
-    <line x1="200" y1="200" x2="56" y2="56"></line>
-  </svg>
-);
 
 const NAV_ITEMS = [
   { to: "/explore", label: "Explore" },
@@ -64,7 +37,7 @@ const NavBar = () => {
           <div className="hidden md:flex flex-1 justify-center px-8 max-w-xl">
             <div className="relative w-full max-w-md group">
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-black transition-colors">
-                <MagnifyingGlass className="text-lg" />
+                <Search className="w-4 h-4" />
               </div>
               <input
                 type="text"
@@ -139,7 +112,7 @@ const NavBar = () => {
               className="lg:hidden p-2 text-slate-900 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
               aria-label="Toggle Mobile Menu"
             >
-              {isMobileMenuOpen ? <XIcon className="text-2xl" /> : <List className="text-2xl" />}
+              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
 
@@ -157,7 +130,7 @@ const NavBar = () => {
           {/* Mobile Search */}
           <div className="relative w-full">
             <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-              <MagnifyingGlass className="text-lg" />
+              <Search className="w-4 h-4" />
             </div>
             <input
               type="text"

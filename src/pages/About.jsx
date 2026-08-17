@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Lightbulb, Bookmark, Zap, ArrowRight } from "lucide-react";
 
 const About = () => {
   return (
@@ -7,7 +8,7 @@ const About = () => {
       <div className="max-w-4xl mx-auto space-y-12">
         {/* Header */}
         <div className="border-b border-slate-200 pb-8 text-center sm:text-left">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black text-white text-xs font-extrabold uppercase tracking-wider mb-4">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black text-white text-xs font-extrabold uppercase tracking-wider mb-4 shadow-xs">
             About BrainDump
           </div>
           <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-950 tracking-tight leading-tight mb-4">
@@ -21,8 +22,8 @@ const About = () => {
         {/* Platform Pillars */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs space-y-3">
-            <div className="w-10 h-10 bg-black text-white rounded-xl flex items-center justify-center font-black text-lg">
-              💡
+            <div className="w-10 h-10 bg-black text-white rounded-xl flex items-center justify-center font-black">
+              <Lightbulb className="w-5 h-5 text-white" />
             </div>
             <h3 className="text-xl font-extrabold text-slate-950">Share Ideas</h3>
             <p className="text-sm font-medium text-slate-600 leading-relaxed">
@@ -31,8 +32,8 @@ const About = () => {
           </div>
 
           <div className="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs space-y-3">
-            <div className="w-10 h-10 bg-black text-white rounded-xl flex items-center justify-center font-black text-lg">
-              🔖
+            <div className="w-10 h-10 bg-black text-white rounded-xl flex items-center justify-center font-black">
+              <Bookmark className="w-5 h-5 text-white" />
             </div>
             <h3 className="text-xl font-extrabold text-slate-950">Save & Build</h3>
             <p className="text-sm font-medium text-slate-600 leading-relaxed">
@@ -41,8 +42,8 @@ const About = () => {
           </div>
 
           <div className="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs space-y-3">
-            <div className="w-10 h-10 bg-black text-white rounded-xl flex items-center justify-center font-black text-lg">
-              ⚡
+            <div className="w-10 h-10 bg-black text-white rounded-xl flex items-center justify-center font-black">
+              <Zap className="w-5 h-5 text-white" />
             </div>
             <h3 className="text-xl font-extrabold text-slate-950">Realtime Feed</h3>
             <p className="text-sm font-medium text-slate-600 leading-relaxed">
@@ -58,7 +59,7 @@ const About = () => {
             BrainDump is engineered with high-performance technologies for rapid response times and clean design aesthetics:
           </p>
           <div className="flex flex-wrap gap-2 pt-2">
-            {["Go (Golang)", "REST API", "PostgreSQL", "React 19", "Vite", "Tailwind CSS v4", "Framer Motion"].map((tech) => (
+            {["Go (Golang)", "REST API", "PostgreSQL", "React 19", "Vite", "Tailwind CSS v4", "Framer Motion", "Lucide Icons"].map((tech) => (
               <span key={tech} className="px-3.5 py-1.5 bg-slate-100 border border-slate-200 rounded-full text-xs font-extrabold text-slate-900">
                 {tech}
               </span>
@@ -70,9 +71,10 @@ const About = () => {
         <div className="text-center pt-4">
           <Link
             to="/explore"
-            className="inline-flex items-center justify-center px-8 py-3.5 bg-black text-white font-extrabold rounded-2xl shadow-md hover:bg-slate-800 transition-all"
+            className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-black text-white font-extrabold rounded-2xl shadow-md hover:bg-slate-800 transition-all"
           >
-            Explore Community Feed →
+            <span>Explore Community Feed</span>
+            <ArrowRight className="w-4 h-4 text-white" />
           </Link>
         </div>
       </div>

@@ -1,40 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Mail, Check, Sun, Moon, LogOut } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-
-const EnvelopeSimple = ({ className }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="16"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    viewBox="0 0 256 256"
-    className={className}
-  >
-    <path d="M32,56H224a8,8,0,0,1,8,8V192a8,8,0,0,1-8,8H32a8,8,0,0,1-8-8V64A8,8,0,0,1,32,56Z"></path>
-    <polyline points="224 56 128 144 32 56"></polyline>
-  </svg>
-);
-
-const Check = ({ className }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="24"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    viewBox="0 0 256 256"
-    className={className}
-  >
-    <polyline points="216 72 104 184 48 128"></polyline>
-  </svg>
-);
 
 const Profile = () => {
   const { user, updateProfile, logout } = useAuth();
@@ -159,7 +125,7 @@ const Profile = () => {
               </label>
               <div className="relative rounded-lg shadow-sm">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                  <EnvelopeSimple className="text-lg" />
+                  <Mail className="w-4 h-4 text-slate-400" />
                 </div>
                 <input
                   type="email"
