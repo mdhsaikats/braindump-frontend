@@ -11,13 +11,13 @@ const Auth = () => {
       navigate("/explore");
     }
   }, [token, navigate]);
-  
+
   const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  
+
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -58,7 +58,7 @@ const Auth = () => {
   return (
     <div className="min-h-screen flex justify-center items-center bg-slate-50 px-4">
       <div className="w-full max-w-md bg-white border border-slate-200 p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300">
-        
+
         {/* Brand/Header */}
         <div className="flex flex-col items-center mb-8">
           <img
@@ -96,7 +96,7 @@ const Auth = () => {
                 name="username"
                 type="text"
                 autocomplete="username"
-                placeholder="mdhsaikats"
+                placeholder="username"
                 className="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-black/20 focus:border-black transition-all font-medium"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
