@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { API_BASE_URL } from "../config/api";
 import LoaderGooeyBlobs from "../components/ui/loaders-gooey-blobs";
@@ -372,13 +372,18 @@ const IdeaCard = ({ idea, onBookmarkToggle, onLikeToggle }) => {
               e.stopPropagation();
               onLikeToggle(idea.id);
             }}
-            className="flex items-center gap-1.5 hover:text-teal-600 transition-colors focus:outline-none"
+            className="flex items-center gap-1.5 transition-colors focus:outline-none cursor-pointer group/like"
+            title={idea.is_liked ? "Unlike Idea" : "Like Idea"}
           >
             <Heart
-              weight={idea.likes > 0 ? "fill" : "regular"}
-              className={`text-base ${idea.likes > 0 ? "text-rose-500 fill-rose-500" : ""}`}
+              weight={idea.is_liked ? "fill" : "regular"}
+              className={`text-base transition-transform active:scale-125 ${
+                idea.is_liked ? "text-rose-500 fill-rose-500" : "text-slate-400 group-hover/like:text-rose-500"
+              }`}
             />
-            <span className="text-xs font-semibold">{idea.likes || 0}</span>
+            <span className={`text-xs font-semibold ${idea.is_liked ? "text-rose-600 font-bold" : "text-slate-600"}`}>
+              {idea.likes || 0}
+            </span>
           </button>
         </div>
       </div>
@@ -391,11 +396,16 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const { openShareModal, refreshKey } = useOutletContext() || {};
   const { token } = useAuth();
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get("q") || "";
 
   const fetchAllIdeas = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`${API_BASE_URL}/api/v1/users/idea`, {
+      const url = searchQuery
+        ? `${API_BASE_URL}/api/v1/users/idea?q=${encodeURIComponent(searchQuery)}`
+        : `${API_BASE_URL}/api/v1/users/idea`;
+      const res = await fetch(url, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
       const data = await res.json();
@@ -419,6 +429,7 @@ const Home = () => {
         const mappedIdeas = data.ideas.map((item) => ({
           ...item,
           isBookmarked: savedIds.has(item.id),
+          is_liked: Boolean(item.is_liked),
         }));
         setIdeas(mappedIdeas);
       }
@@ -431,7 +442,7 @@ const Home = () => {
 
   useEffect(() => {
     fetchAllIdeas();
-  }, [refreshKey, token]);
+  }, [refreshKey, token, searchQuery]);
 
   const toggleBookmark = async (id, currentlyBookmarked) => {
     if (!token) return;
@@ -465,16 +476,37 @@ const Home = () => {
 
     // Optimistic UI update
     setIdeas((prev) =>
-      prev.map((idea) =>
-        idea.id === id ? { ...idea, likes: (idea.likes || 0) + 1 } : idea
-      )
+      prev.map((idea) => {
+        if (idea.id === id) {
+          const currentlyLiked = idea.is_liked || false;
+          const newLiked = !currentlyLiked;
+          const currentLikes = parseInt(idea.likes || 0, 10);
+          const newLikes = newLiked ? currentLikes + 1 : Math.max(0, currentLikes - 1);
+          return {
+            ...idea,
+            is_liked: newLiked,
+            likes: newLikes,
+          };
+        }
+        return idea;
+      })
     );
 
     try {
-      await fetch(`${API_BASE_URL}/api/v1/users/idea/${id}/like`, {
+      const res = await fetch(`${API_BASE_URL}/api/v1/users/idea/${id}/like`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
       });
+      const data = await res.json();
+      if (res.ok && data.success && data.data) {
+        setIdeas((prev) =>
+          prev.map((idea) =>
+            idea.id === id
+              ? { ...idea, likes: data.data.likes, is_liked: data.data.is_liked }
+              : idea
+          )
+        );
+      }
     } catch (err) {
       console.error("Error toggling like:", err);
     }

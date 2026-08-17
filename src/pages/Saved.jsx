@@ -137,7 +137,7 @@ const getDifficultyColor = (difficulty) => {
 
 
 
-const SavedIdeaCard = ({ idea, onRemove }) => {
+const SavedIdeaCard = ({ idea, onRemove, onLikeToggle }) => {
   const authorName = idea.author_name || idea.author?.name || "anonymous";
   const avatarUrl = idea.author?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(authorName)}&background=f1f5f9&color=0f172a`;
   const tags = Array.isArray(idea.tags) ? idea.tags : [];
@@ -154,7 +154,7 @@ const SavedIdeaCard = ({ idea, onRemove }) => {
               e.stopPropagation();
               onRemove(idea.id);
             }}
-            className="flex-shrink-0 text-slate-900 hover:text-black p-1.5 rounded-lg hover:bg-slate-100 transition-colors focus:outline-none"
+            className="flex-shrink-0 text-slate-900 hover:text-black p-1.5 rounded-lg hover:bg-slate-100 transition-colors focus:outline-none cursor-pointer"
             title="Remove from saved"
           >
             <BookmarkSimple weight="fill" className="text-lg text-black" />
@@ -190,13 +190,24 @@ const SavedIdeaCard = ({ idea, onRemove }) => {
           </span>
         </div>
         <div className="flex items-center gap-4 text-slate-500">
-          <div className="flex items-center gap-1.5 text-slate-900">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              if (onLikeToggle) onLikeToggle(idea.id);
+            }}
+            className="flex items-center gap-1.5 transition-colors focus:outline-none cursor-pointer group/like"
+            title={idea.is_liked ? "Unlike Idea" : "Like Idea"}
+          >
             <Heart
-              weight={idea.likes > 0 ? "fill" : "regular"}
-              className={`text-base ${idea.likes > 0 ? "text-slate-900 fill-slate-900" : ""}`}
+              weight={idea.is_liked ? "fill" : "regular"}
+              className={`text-base transition-transform active:scale-125 ${
+                idea.is_liked ? "text-rose-500 fill-rose-500" : "text-slate-400 group-hover/like:text-rose-500"
+              }`}
             />
-            <span className="text-xs font-semibold">{idea.likes || 0}</span>
-          </div>
+            <span className={`text-xs font-semibold ${idea.is_liked ? "text-rose-600 font-bold" : "text-slate-600"}`}>
+              {idea.likes || 0}
+            </span>
+          </button>
         </div>
       </div>
     </article>
@@ -229,6 +240,46 @@ const Saved = () => {
   useEffect(() => {
     fetchSavedIdeas();
   }, [token]);
+
+  const toggleLike = async (id) => {
+    if (!token) return;
+
+    setSavedIdeas((prev) =>
+      prev.map((idea) => {
+        if (idea.id === id) {
+          const currentlyLiked = idea.is_liked || false;
+          const newLiked = !currentlyLiked;
+          const currentLikes = parseInt(idea.likes || 0, 10);
+          const newLikes = newLiked ? currentLikes + 1 : Math.max(0, currentLikes - 1);
+          return {
+            ...idea,
+            is_liked: newLiked,
+            likes: newLikes,
+          };
+        }
+        return idea;
+      })
+    );
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/v1/users/idea/${id}/like`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (res.ok && data.success && data.data) {
+        setSavedIdeas((prev) =>
+          prev.map((idea) =>
+            idea.id === id
+              ? { ...idea, likes: data.data.likes, is_liked: data.data.is_liked }
+              : idea
+          )
+        );
+      }
+    } catch (err) {
+      console.error("Error toggling like:", err);
+    }
+  };
 
   const handleRemove = async (id) => {
     if (!token) return;
@@ -274,6 +325,7 @@ const Saved = () => {
                 key={idea.id}
                 idea={idea}
                 onRemove={handleRemove}
+                onLikeToggle={toggleLike}
               />
             ))}
           </div>

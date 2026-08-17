@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useSearchParams, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Search, Menu, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -14,6 +14,23 @@ const NAV_ITEMS = [
 const NavBar = () => {
   const { user, token, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  const searchQuery = searchParams.get("q") || "";
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    if (window.location.pathname !== "/explore") {
+      navigate(`/explore?q=${encodeURIComponent(value)}`);
+    } else {
+      if (value) {
+        setSearchParams({ q: value });
+      } else {
+        setSearchParams({});
+      }
+    }
+  };
 
   const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
@@ -41,6 +58,8 @@ const NavBar = () => {
               </div>
               <input
                 type="text"
+                value={searchQuery}
+                onChange={handleSearchChange}
                 placeholder="Search ideas, technologies..."
                 className="block w-full pl-10 pr-12 py-2.5 border border-slate-200 rounded-xl leading-5 bg-slate-100/70 text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-black/20 focus:border-black text-sm font-medium transition-all shadow-inner"
               />
@@ -134,6 +153,8 @@ const NavBar = () => {
             </div>
             <input
               type="text"
+              value={searchQuery}
+              onChange={handleSearchChange}
               placeholder="Search ideas..."
               className="block w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl bg-slate-50 text-slate-900 text-sm font-medium focus:outline-none focus:bg-white focus:ring-2 focus:ring-black/20 focus:border-black"
             />
