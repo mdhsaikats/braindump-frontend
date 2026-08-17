@@ -21,17 +21,17 @@ const Github = ({ className = "w-5 h-5 text-black dark:text-white" }) => (
 
 const Footer = () => {
     return (
-        <footer className="bg-white dark:bg-slate-900 border-t border-slate-200/80 dark:border-slate-800 mt-auto py-8 transition-colors duration-200">
-            <div className="w-full px-4 sm:px-8 lg:px-12 flex flex-col md:flex-row items-center justify-between gap-4">
-                <div className="flex items-center gap-3 text-slate-700 dark:text-slate-300">
+        <footer className="relative bg-white dark:bg-slate-900 border-t border-slate-200/80 dark:border-slate-800 mt-auto py-8 transition-colors duration-200">
+            <div className="w-full px-4 sm:px-8 lg:px-12 pr-28 sm:pr-56 lg:pr-80 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-3 text-slate-700 dark:text-slate-300 text-center md:text-left">
                     <img
                       src="/logo/logo.png"
                       alt="BrainDump Logo"
                       className="w-7 h-7 rounded-lg object-contain"
                     />
-                    <span className="text-sm font-bold">© 2026 BrainDump. Built for developers worldwide.</span>
+                    <span className="text-xs sm:text-sm font-bold">© 2026 BrainDump. Built for developers worldwide.</span>
                 </div>
-                <div className="flex items-center gap-6 text-sm font-bold text-slate-600 dark:text-slate-400">
+                <div className="flex items-center gap-4 sm:gap-6 text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-400">
                     <Link to="/about" className="hover:text-black dark:hover:text-white transition-colors">About</Link>
                     <Link to="/terms" className="hover:text-black dark:hover:text-white transition-colors">Terms</Link>
                     <Link to="/privacy" className="hover:text-black dark:hover:text-white transition-colors">Privacy</Link>
@@ -46,6 +46,11 @@ const Footer = () => {
                     </a>
                 </div>
             </div>
+            <img
+              src="/gif/cat.gif"
+              alt="Cat"
+              className="absolute bottom-0 right-1 sm:right-4 z-10 w-20 h-20 sm:w-32 sm:h-32 md:w-44 md:h-44 lg:w-52 lg:h-52 object-contain pointer-events-none drop-shadow-lg select-none"
+            />
         </footer>
     )
 }

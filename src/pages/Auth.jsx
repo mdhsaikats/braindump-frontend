@@ -195,6 +195,11 @@ const Auth = () => {
           </button>
         </div>
       </div>
+      <img
+        src="/gif/cat.gif"
+        alt="Cat"
+        className="absolute bottom-0 right-1 sm:right-4 z-10 w-20 h-20 sm:w-32 sm:h-32 md:w-44 md:h-44 lg:w-52 lg:h-52 object-contain pointer-events-none drop-shadow-lg select-none"
+      />
     </div>
   );
 };

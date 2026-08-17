@@ -63,11 +63,8 @@ const NavBar = () => {
                 value={searchQuery}
                 onChange={handleSearchChange}
                 placeholder="Search ideas, technologies..."
-                className="block w-full pl-10 pr-12 py-2.5 border border-slate-200 dark:border-slate-700/80 rounded-xl leading-5 bg-slate-100/70 dark:bg-slate-800/70 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-black/20 dark:focus:ring-white/20 focus:border-black dark:focus:border-white text-sm font-medium transition-all shadow-inner"
+                className="block w-full pl-10 pr-4 py-2.5 border border-slate-200 dark:border-slate-700/80 rounded-xl leading-5 bg-slate-100/70 dark:bg-slate-800/70 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-black/20 dark:focus:ring-white/20 focus:border-black dark:focus:border-white text-sm font-medium transition-all shadow-inner"
               />
-              <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                <span className="text-xs font-bold text-slate-400 dark:text-slate-500 border border-slate-200 dark:border-slate-700 rounded-md px-1.5 py-0.5 bg-white dark:bg-slate-800 shadow-2xs">⌘K</span>
-              </div>
             </div>
           </div>
 
