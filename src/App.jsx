@@ -5,6 +5,9 @@ import Auth from "./pages/Auth";
 import MyIdeas from "./pages/MyIdeas";
 import Saved from "./pages/Saved";
 import Profile from "./pages/Profile";
+import About from "./pages/About";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -67,6 +70,18 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: <Profile />,
+      },
+      {
+        path: "/about",
+        element: <About />,
+      },
+      {
+        path: "/privacy",
+        element: <Privacy />,
+      },
+      {
+        path: "/terms",
+        element: <Terms />,
       },
       {
         path: "*",

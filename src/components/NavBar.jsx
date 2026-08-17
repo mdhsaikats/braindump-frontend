@@ -24,6 +24,13 @@ const List = ({ className }) => (
   </svg>
 );
 
+const XIcon = ({ className }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="20" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 256 256" className={className}>
+    <line x1="200" y1="56" x2="56" y2="200"></line>
+    <line x1="200" y1="200" x2="56" y2="56"></line>
+  </svg>
+);
+
 const NAV_ITEMS = [
   { to: "/explore", label: "Explore" },
   { to: "/my-ideas", label: "My Ideas" },
@@ -33,6 +40,10 @@ const NAV_ITEMS = [
 
 const NavBar = () => {
   const { user, token, logout } = useAuth();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+
+  const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   return (
     <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-slate-200/80 shadow-xs">
@@ -40,7 +51,7 @@ const NavBar = () => {
         <div className="flex items-center justify-between h-20">
 
           {/* Left: Logo */}
-          <Link to="/explore" className="flex-shrink-0 flex items-center gap-3 group no-underline">
+          <Link to="/explore" onClick={closeMobileMenu} className="flex-shrink-0 flex items-center gap-3 group no-underline">
             <img
               src="/logo/logo.png"
               alt="BrainDump Logo"
@@ -96,7 +107,7 @@ const NavBar = () => {
           
           <div className="flex items-center gap-4 ml-4">
             {token && (
-              <Link to="/profile" className="flex items-center gap-2.5 group bg-slate-100 hover:bg-slate-200/80 px-3 py-1.5 rounded-full border border-slate-200/60 transition-colors">
+              <Link to="/profile" onClick={closeMobileMenu} className="flex items-center gap-2.5 group bg-slate-100 hover:bg-slate-200/80 px-3 py-1.5 rounded-full border border-slate-200/60 transition-colors">
                 <img
                   src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user?.username || 'User')}&background=09090b&color=fff`}
                   alt="Profile"
@@ -122,14 +133,81 @@ const NavBar = () => {
                 Login
               </NavLink>
             )}
-            {/* Mobile Menu Button */}
-            <button className="lg:hidden p-2 text-slate-700 hover:text-black">
-              <List className="text-2xl" />
+            {/* Mobile Menu Toggle Button */}
+            <button
+              onClick={toggleMobileMenu}
+              className="lg:hidden p-2 text-slate-900 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
+              aria-label="Toggle Mobile Menu"
+            >
+              {isMobileMenuOpen ? <XIcon className="text-2xl" /> : <List className="text-2xl" />}
             </button>
           </div>
 
         </div>
       </div>
+
+      {/* Mobile Navigation Drawer */}
+      {isMobileMenuOpen && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          exit={{ opacity: 0, height: 0 }}
+          className="lg:hidden bg-white border-b border-slate-200 px-4 py-6 space-y-4 shadow-xl"
+        >
+          {/* Mobile Search */}
+          <div className="relative w-full">
+            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+              <MagnifyingGlass className="text-lg" />
+            </div>
+            <input
+              type="text"
+              placeholder="Search ideas..."
+              className="block w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl bg-slate-50 text-slate-900 text-sm font-medium focus:outline-none focus:bg-white focus:ring-2 focus:ring-black/20 focus:border-black"
+            />
+          </div>
+
+          {/* Mobile Nav Links */}
+          <div className="flex flex-col space-y-2 pt-2">
+            {NAV_ITEMS.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                onClick={closeMobileMenu}
+                className={({ isActive }) =>
+                  `px-4 py-3 rounded-xl text-base font-bold transition-all ${
+                    isActive ? "bg-black text-white" : "text-slate-700 hover:bg-slate-100"
+                  }`
+                }
+              >
+                {item.label}
+              </NavLink>
+            ))}
+          </div>
+
+          {/* Mobile Auth Button */}
+          <div className="pt-4 border-t border-slate-100 flex flex-col gap-3">
+            {token ? (
+              <button
+                onClick={() => {
+                  logout();
+                  closeMobileMenu();
+                }}
+                className="w-full py-3 rounded-xl text-center text-sm font-bold text-rose-600 border border-rose-200 hover:bg-rose-50 transition-colors cursor-pointer"
+              >
+                Sign Out (@{user?.username})
+              </button>
+            ) : (
+              <Link
+                to="/login"
+                onClick={closeMobileMenu}
+                className="w-full py-3 rounded-xl text-center text-sm font-bold text-white bg-black hover:bg-slate-800 transition-colors"
+              >
+                Log In / Register
+              </Link>
+            )}
+          </div>
+        </motion.div>
+      )}
     </nav>
   );
 };

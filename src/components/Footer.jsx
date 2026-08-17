@@ -1,15 +1,21 @@
-import React from 'react'
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-const Lightbulb = ({ className }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256" className={className}>
-    <path d="M235.91,91.86,220,44.15a16,16,0,0,0-10.22-10.22l-47.71-15.9a15.91,15.91,0,0,0-16.14,4.24l-89.65,89.65a15.9,15.9,0,0,0-4.24,16.14l15.9,47.71A16,16,0,0,0,78.15,186l47.71,15.9a15.9,15.9,0,0,0,16.14-4.24l89.65-89.65A15.91,15.91,0,0,0,235.91,91.86ZM184,88a12,12,0,1,1,12-12A12,12,0,0,1,184,88Zm-32,32a12,12,0,1,1,12-12A12,12,0,0,1,152,120Z"></path>
-  </svg>
-);
-
-const GithubLogo = ({ className }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="16" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 256 256" className={className}>
-    <path d="M119.8,224c-22-2-41-10.4-55.2-22.7A102.7,102.7,0,0,1,32,128c0-54.3,42.4-98.8,96-98.8s96,44.5,96,98.8a100.8,100.8,0,0,1-37.4,78.2c-15.1,12.3-35.3,20.4-58.8,22.2"></path>
-    <path d="M96,224v-8a48,48,0,0,1,26.8-43V160a24,24,0,0,1,24-24h32"></path>
+const Github = ({ className = "w-5 h-5 text-black" }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+    <path d="M9 18c-4.51 2-5-2-7-2" />
   </svg>
 );
 
@@ -26,12 +32,17 @@ const Footer = () => {
                     <span className="text-sm font-bold">© 2026 BrainDump. Built for developers worldwide.</span>
                 </div>
                 <div className="flex items-center gap-6 text-sm font-bold text-slate-600">
-                    <a href="#" className="hover:text-black transition-colors">About</a>
-                    <a href="#" className="hover:text-black transition-colors">Terms</a>
-                    <a href="#" className="hover:text-black transition-colors">Privacy</a>
-                    <a href="#" className="hover:text-black transition-colors flex items-center gap-1.5">
-                        <GithubLogo className="text-lg text-black" />
-                        GitHub
+                    <Link to="/about" className="hover:text-black transition-colors">About</Link>
+                    <Link to="/terms" className="hover:text-black transition-colors">Terms</Link>
+                    <Link to="/privacy" className="hover:text-black transition-colors">Privacy</Link>
+                    <a
+                      href="https://github.com/mdhsaikats/braindump-frontend"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-black transition-transform transform hover:scale-110 p-1"
+                      aria-label="GitHub Repository"
+                    >
+                        <Github className="w-5 h-5 text-black" />
                     </a>
                 </div>
             </div>

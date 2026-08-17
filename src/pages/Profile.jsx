@@ -46,6 +46,7 @@ const Profile = () => {
   const [isSaved, setIsSaved] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
+  const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem("darkMode") === "true");
 
   // Sync state with authenticated user data from context
   useEffect(() => {
@@ -55,6 +56,17 @@ const Profile = () => {
       setBio(user.bio || "");
     }
   }, [user]);
+
+  // Handle Dark Mode Theme Inversion
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("darkMode", "true");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("darkMode", "false");
+    }
+  }, [isDarkMode]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -198,6 +210,40 @@ const Profile = () => {
               </button>
             </div>
           </form>
+        </div>
+
+        {/* Appearance / Theme Settings */}
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 mt-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-bold text-slate-900">
+                Appearance & Theme
+              </h2>
+              <p className="text-xs font-medium text-slate-500 mt-1">
+                Toggle dark mode to invert the website theme to 100% dark contrast.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <span className="text-xs font-extrabold uppercase text-slate-500">
+                {isDarkMode ? "Dark Mode On" : "Light Mode"}
+              </span>
+              <button
+                type="button"
+                onClick={() => setIsDarkMode(!isDarkMode)}
+                className={`relative inline-flex h-7 w-14 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                  isDarkMode ? 'bg-black' : 'bg-slate-300'
+                }`}
+                aria-label="Toggle Dark Mode"
+              >
+                <span
+                  className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                    isDarkMode ? 'translate-x-7' : 'translate-x-0'
+                  }`}
+                />
+              </button>
+            </div>
+          </div>
         </div>
 
       </main>

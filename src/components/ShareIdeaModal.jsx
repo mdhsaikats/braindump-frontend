@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { createPortal } from "react-dom";
 import { useAuth } from "../context/AuthContext";
 import { API_BASE_URL } from "../config/api";
 
@@ -33,8 +34,6 @@ const Lightbulb = ({ className }) => (
   </svg>
 );
 
-
-
 const ShareIdeaModal = ({ isOpen, onClose, onCreated }) => {
   const { token } = useAuth();
   const [title, setTitle] = useState("");
@@ -42,6 +41,17 @@ const ShareIdeaModal = ({ isOpen, onClose, onCreated }) => {
   const [tags, setTags] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+
+  React.useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -51,9 +61,12 @@ const ShareIdeaModal = ({ isOpen, onClose, onCreated }) => {
     setIsSubmitting(true);
 
     try {
-      const formattedTags = tags.split(",").map((t) => t.trim()).filter(Boolean);
+      const tagArray = tags
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean);
 
-      const response = await fetch(`${API_BASE_URL}/api/v1/users/idea`, {
+      const res = await fetch(`${API_BASE_URL}/api/v1/users/idea`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -62,20 +75,20 @@ const ShareIdeaModal = ({ isOpen, onClose, onCreated }) => {
         body: JSON.stringify({
           title,
           description,
-          tags: formattedTags,
+          tags: tagArray,
         }),
       });
 
-      const data = await response.json();
+      const data = await res.json();
 
-      if (response.ok && data.success) {
+      if (res.ok) {
         setTitle("");
         setDescription("");
         setTags("");
-        onClose();
         if (onCreated) onCreated();
+        onClose();
       } else {
-        setError(data.message || data.error || "Failed to publish idea");
+        setError(data.error || "Failed to publish idea.");
       }
     } catch (err) {
       setError("Network error. Failed to publish idea.");
@@ -84,9 +97,15 @@ const ShareIdeaModal = ({ isOpen, onClose, onCreated }) => {
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm transition-opacity animate-fadeIn">
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl w-full max-w-lg overflow-hidden transform transition-all">
+  return createPortal(
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-fadeIn"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-lg max-h-[90vh] bg-white rounded-3xl border border-slate-200 shadow-2xl overflow-y-auto transform transition-all my-auto"
+      >
         {/* Modal Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/50">
           <div className="flex items-center gap-2.5">
@@ -180,7 +199,8 @@ const ShareIdeaModal = ({ isOpen, onClose, onCreated }) => {
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

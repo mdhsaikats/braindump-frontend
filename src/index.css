@@ -8,11 +8,18 @@
   --color-brand-600: #000000;
 }
 
-*, ::before, ::after {
+*,
+::before,
+::after {
   letter-spacing: -0.01em;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: 'Cabinet Grotesk', 'Satoshi', system-ui, sans-serif;
   letter-spacing: -0.02em;
 }
@@ -23,6 +30,17 @@ body {
   color: #09090b;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: filter 0.3s ease;
+}
+
+html.dark body {
+  filter: invert(100%);
+}
+
+html.dark img,
+html.dark video,
+html.dark iframe {
+  filter: invert(100%);
 }
 
 ::selection {
