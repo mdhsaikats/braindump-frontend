@@ -3,6 +3,7 @@ import { useOutletContext } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { API_BASE_URL } from "../config/api";
 import LoaderGooeyBlobs from "../components/ui/loaders-gooey-blobs";
+import EditIdeaModal from "../components/EditIdeaModal";
 
 const Plus = ({ className }) => (
   <svg
@@ -78,7 +79,7 @@ const Trash = ({ className }) => (
   </svg>
 );
 
-const MyIdeaCard = ({ idea, onDelete }) => {
+const MyIdeaCard = ({ idea, onEdit, onDelete }) => {
   const authorName = idea.author_name || idea.author?.name || "you";
   const avatarUrl = idea.author?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(authorName)}&background=f1f5f9&color=0f172a`;
   const tags = Array.isArray(idea.tags) ? idea.tags : [];
@@ -93,6 +94,16 @@ const MyIdeaCard = ({ idea, onDelete }) => {
             </h3>
           </div>
           <div className="flex items-center gap-1">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(idea);
+              }}
+              className="p-1.5 rounded-lg text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+              title="Edit Idea"
+            >
+              <PencilSimple className="text-lg" />
+            </button>
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -151,6 +162,7 @@ const MyIdeaCard = ({ idea, onDelete }) => {
 const MyIdeas = () => {
   const [ideas, setIdeas] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [editingIdea, setEditingIdea] = useState(null);
   const { openShareModal, refreshKey } = useOutletContext() || {};
   const { token } = useAuth();
 
@@ -191,6 +203,12 @@ const MyIdeas = () => {
     }
   };
 
+  const handleUpdateIdea = (updatedIdea) => {
+    setIdeas((prev) =>
+      prev.map((idea) => (idea.id === updatedIdea.id ? { ...idea, ...updatedIdea } : idea))
+    );
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans flex flex-col transition-colors duration-200">
       <main className="flex-grow w-full px-4 sm:px-8 lg:px-12 flex flex-col gap-8">
@@ -226,6 +244,7 @@ const MyIdeas = () => {
               <MyIdeaCard
                 key={idea.id}
                 idea={idea}
+                onEdit={(selectedIdea) => setEditingIdea(selectedIdea)}
                 onDelete={handleDelete}
               />
             ))}
@@ -251,8 +270,16 @@ const MyIdeas = () => {
           </div>
         )}
       </main>
+
+      <EditIdeaModal
+        isOpen={Boolean(editingIdea)}
+        onClose={() => setEditingIdea(null)}
+        idea={editingIdea}
+        onUpdated={handleUpdateIdea}
+      />
     </div>
   );
 };
 
 export default MyIdeas;
+

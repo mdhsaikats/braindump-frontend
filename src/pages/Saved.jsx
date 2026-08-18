@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { API_BASE_URL } from "../config/api";
 import LoaderGooeyBlobs from "../components/ui/loaders-gooey-blobs";
+import EditIdeaModal from "../components/EditIdeaModal";
 
 const BookmarkSimple = ({ className, weight }) => (
   <svg
@@ -54,10 +55,29 @@ const Bookmark = ({ className }) => (
   </svg>
 );
 
-const SavedIdeaCard = ({ idea, onRemove, onLikeToggle }) => {
+const PencilSimple = ({ className }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="16"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    viewBox="0 0 256 256"
+    className={className}
+  >
+    <path d="M92.7,216H48a8,8,0,0,1-8-8V163.3a7.9,7.9,0,0,1,2.3-5.7l120-120a8,8,0,0,1,11.4,0l44.7,44.7a8,8,0,0,1,0,11.4l-120,120A7.9,7.9,0,0,1,92.7,216Z"></path>
+    <line x1="136" y1="64" x2="192" y2="120"></line>
+  </svg>
+);
+
+const SavedIdeaCard = ({ idea, currentUser, onRemove, onLikeToggle, onEdit }) => {
   const authorName = idea.author_name || idea.author?.name || "anonymous";
   const avatarUrl = idea.author?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(authorName)}&background=f1f5f9&color=0f172a`;
   const tags = Array.isArray(idea.tags) ? idea.tags : [];
+  const isOwner = currentUser && (idea.user_id === currentUser.id || idea.user_id === currentUser.userId);
 
   return (
     <article className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-black/40 dark:hover:border-white/40 transition-all duration-300 flex flex-col cursor-pointer group overflow-hidden">
@@ -66,16 +86,30 @@ const SavedIdeaCard = ({ idea, onRemove, onLikeToggle }) => {
           <h3 className="text-lg font-bold text-slate-900 dark:text-white leading-snug group-hover:text-black dark:group-hover:text-slate-100 transition-colors line-clamp-2">
             {idea.title}
           </h3>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onRemove(idea.id);
-            }}
-            className="flex-shrink-0 text-slate-900 dark:text-white hover:text-black dark:hover:text-slate-200 p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none cursor-pointer"
-            title="Remove from saved"
-          >
-            <BookmarkSimple weight="fill" className="text-lg text-black dark:text-white" />
-          </button>
+          <div className="flex items-center gap-1">
+            {isOwner && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEdit(idea);
+                }}
+                className="flex-shrink-0 text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-white p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none cursor-pointer"
+                title="Edit Idea"
+              >
+                <PencilSimple className="text-lg" />
+              </button>
+            )}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onRemove(idea.id);
+              }}
+              className="flex-shrink-0 text-slate-900 dark:text-white hover:text-black dark:hover:text-slate-200 p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none cursor-pointer"
+              title="Remove from saved"
+            >
+              <BookmarkSimple weight="fill" className="text-lg text-black dark:text-white" />
+            </button>
+          </div>
         </div>
         <p className="text-slate-600 dark:text-slate-300 text-sm mb-4 flex-1 line-clamp-3 leading-relaxed">
           {idea.description}
@@ -134,7 +168,8 @@ const SavedIdeaCard = ({ idea, onRemove, onLikeToggle }) => {
 const Saved = () => {
   const [savedIdeas, setSavedIdeas] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { token } = useAuth();
+  const [editingIdea, setEditingIdea] = useState(null);
+  const { token, user: currentUser } = useAuth();
 
   const fetchSavedIdeas = async () => {
     if (!token) return;
@@ -214,6 +249,12 @@ const Saved = () => {
     }
   };
 
+  const handleUpdateIdea = (updatedIdea) => {
+    setSavedIdeas((prev) =>
+      prev.map((idea) => (idea.id === updatedIdea.id ? { ...idea, ...updatedIdea } : idea))
+    );
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans flex flex-col transition-colors duration-200">
       <main className="flex-grow w-full px-4 sm:px-8 lg:px-12 flex flex-col gap-8">
@@ -241,8 +282,10 @@ const Saved = () => {
               <SavedIdeaCard
                 key={idea.id}
                 idea={idea}
+                currentUser={currentUser}
                 onRemove={handleRemove}
                 onLikeToggle={toggleLike}
+                onEdit={(selectedIdea) => setEditingIdea(selectedIdea)}
               />
             ))}
           </div>
@@ -266,8 +309,16 @@ const Saved = () => {
           </div>
         )}
       </main>
+
+      <EditIdeaModal
+        isOpen={Boolean(editingIdea)}
+        onClose={() => setEditingIdea(null)}
+        idea={editingIdea}
+        onUpdated={handleUpdateIdea}
+      />
     </div>
   );
 };
 
 export default Saved;
+
