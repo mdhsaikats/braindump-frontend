@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import { API_BASE_URL } from "../config/api";
 import LoaderGooeyBlobs from "../components/ui/loaders-gooey-blobs";
 import EditIdeaModal from "../components/EditIdeaModal";
+import IdeaDetailsModal from "../components/IdeaDetailsModal";
 
 const BookmarkSimple = ({ className, weight }) => (
   <svg
@@ -73,14 +74,14 @@ const PencilSimple = ({ className }) => (
   </svg>
 );
 
-const SavedIdeaCard = ({ idea, currentUser, onRemove, onLikeToggle, onEdit }) => {
+const SavedIdeaCard = ({ idea, currentUser, onRemove, onLikeToggle, onEdit, onOpen }) => {
   const authorName = idea.author_name || idea.author?.name || "anonymous";
   const avatarUrl = idea.author?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(authorName)}&background=f1f5f9&color=0f172a`;
   const tags = Array.isArray(idea.tags) ? idea.tags : [];
   const isOwner = currentUser && (idea.user_id === currentUser.id || idea.user_id === currentUser.userId);
 
   return (
-    <article className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-black/40 dark:hover:border-white/40 transition-all duration-300 flex flex-col cursor-pointer group overflow-hidden">
+    <article onClick={() => onOpen(idea)} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-black/40 dark:hover:border-white/40 transition-all duration-300 flex flex-col cursor-pointer group overflow-hidden">
       <div className="p-5 flex-1 flex flex-col">
         <div className="flex justify-between items-start mb-3 gap-3">
           <h3 className="text-lg font-bold text-slate-900 dark:text-white leading-snug group-hover:text-black dark:group-hover:text-slate-100 transition-colors line-clamp-2">
@@ -169,6 +170,7 @@ const Saved = () => {
   const [savedIdeas, setSavedIdeas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editingIdea, setEditingIdea] = useState(null);
+  const [selectedIdea, setSelectedIdea] = useState(null);
   const { token, user: currentUser } = useAuth();
 
   const fetchSavedIdeas = async () => {
@@ -286,6 +288,7 @@ const Saved = () => {
                 onRemove={handleRemove}
                 onLikeToggle={toggleLike}
                 onEdit={(selectedIdea) => setEditingIdea(selectedIdea)}
+                onOpen={setSelectedIdea}
               />
             ))}
           </div>
@@ -316,9 +319,9 @@ const Saved = () => {
         idea={editingIdea}
         onUpdated={handleUpdateIdea}
       />
+      <IdeaDetailsModal idea={selectedIdea} onClose={() => setSelectedIdea(null)} />
     </div>
   );
 };
 
 export default Saved;
-

@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { API_BASE_URL } from "../config/api";
 import LoaderGooeyBlobs from "../components/ui/loaders-gooey-blobs";
 import EditIdeaModal from "../components/EditIdeaModal";
+import IdeaDetailsModal from "../components/IdeaDetailsModal";
 
 const Plus = ({ className }) => (
   <svg
@@ -79,13 +80,13 @@ const Trash = ({ className }) => (
   </svg>
 );
 
-const MyIdeaCard = ({ idea, onEdit, onDelete }) => {
+const MyIdeaCard = ({ idea, onEdit, onDelete, onOpen }) => {
   const authorName = idea.author_name || idea.author?.name || "you";
   const avatarUrl = idea.author?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(authorName)}&background=f1f5f9&color=0f172a`;
   const tags = Array.isArray(idea.tags) ? idea.tags : [];
 
   return (
-    <article className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-black/40 dark:hover:border-white/40 transition-all duration-300 flex flex-col cursor-pointer group overflow-hidden">
+    <article onClick={() => onOpen(idea)} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-black/40 dark:hover:border-white/40 transition-all duration-300 flex flex-col cursor-pointer group overflow-hidden">
       <div className="p-5 flex-1 flex flex-col">
         <div className="flex justify-between items-start mb-3 gap-3">
           <div>
@@ -163,6 +164,7 @@ const MyIdeas = () => {
   const [ideas, setIdeas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editingIdea, setEditingIdea] = useState(null);
+  const [selectedIdea, setSelectedIdea] = useState(null);
   const { openShareModal, refreshKey } = useOutletContext() || {};
   const { token } = useAuth();
 
@@ -246,6 +248,7 @@ const MyIdeas = () => {
                 idea={idea}
                 onEdit={(selectedIdea) => setEditingIdea(selectedIdea)}
                 onDelete={handleDelete}
+                onOpen={setSelectedIdea}
               />
             ))}
           </div>
@@ -277,9 +280,9 @@ const MyIdeas = () => {
         idea={editingIdea}
         onUpdated={handleUpdateIdea}
       />
+      <IdeaDetailsModal idea={selectedIdea} onClose={() => setSelectedIdea(null)} />
     </div>
   );
 };
 
 export default MyIdeas;
-

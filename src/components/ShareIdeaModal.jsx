@@ -33,7 +33,7 @@ const ShareIdeaModal = ({ isOpen, onClose, onCreated }) => {
     try {
       const tagArray = tags
         .split(",")
-        .map((t) => t.trim())
+        .map((t) => t.trim().toLowerCase())
         .filter(Boolean);
 
       const res = await fetch(`${API_BASE_URL}/api/v1/users/idea`, {

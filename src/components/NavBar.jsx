@@ -1,15 +1,15 @@
 import React from 'react';
 import { Link, NavLink, useSearchParams, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { Search, Menu, X, Sun, Moon } from 'lucide-react';
+import { Search, Menu, X, Sun, Moon, Compass, Lightbulb, Bookmark, UserRound, LogOut, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 
 const NAV_ITEMS = [
-  { to: "/explore", label: "Explore" },
-  { to: "/my-ideas", label: "My Ideas" },
-  { to: "/saved", label: "Saved" },
-  { to: "/profile", label: "Profile" },
+  { to: "/explore", label: "Explore", icon: Compass },
+  { to: "/my-ideas", label: "My Ideas", icon: Lightbulb },
+  { to: "/saved", label: "Saved", icon: Bookmark },
+  { to: "/profile", label: "Profile", icon: UserRound },
 ];
 
 const NavBar = () => {
@@ -147,67 +147,55 @@ const NavBar = () => {
         </div>
       </div>
 
-      {/* Mobile Navigation Drawer */}
+      {/* Mobile Navigation Panel */}
       {isMobileMenuOpen && (
         <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          exit={{ opacity: 0, height: 0 }}
-          className="lg:hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-6 space-y-4 shadow-xl"
+          initial={{ opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.18, ease: "easeOut" }}
+          className="lg:hidden border-t border-slate-200/80 dark:border-slate-800 bg-slate-50/90 dark:bg-slate-950/90 px-4 py-4 sm:px-6"
         >
-          {/* Mobile Search */}
-          <div className="relative w-full">
-            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-              <Search className="w-4 h-4" />
+          <div className="mx-auto max-w-md rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3 shadow-2xl shadow-slate-900/10 dark:shadow-black/30">
+            <div className="relative mb-3">
+              <Search className="absolute left-3.5 top-1/2 w-4 h-4 -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                placeholder="Search ideas..."
+                className="block w-full rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-100/80 dark:bg-slate-800 px-10 py-3 text-sm font-medium text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none transition focus:border-black dark:focus:border-white focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10"
+              />
             </div>
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={handleSearchChange}
-              placeholder="Search ideas..."
-              className="block w-full pl-10 pr-4 py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-medium focus:outline-none focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-black/20 dark:focus:ring-white/20 focus:border-black dark:focus:border-white"
-            />
-          </div>
 
-          {/* Mobile Nav Links */}
-          <div className="flex flex-col space-y-2 pt-2">
-            {NAV_ITEMS.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                onClick={closeMobileMenu}
-                className={({ isActive }) =>
-                  `px-4 py-3 rounded-xl text-base font-bold transition-all ${
-                    isActive ? "bg-black dark:bg-white text-white dark:text-black" : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
-                  }`
-                }
-              >
-                {item.label}
-              </NavLink>
-            ))}
-          </div>
-
-          {/* Mobile Auth Button */}
-          <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-3">
-            {token ? (
-              <button
-                onClick={() => {
-                  logout();
-                  closeMobileMenu();
-                }}
-                className="w-full py-3 rounded-xl text-center text-sm font-bold text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900/50 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors cursor-pointer"
-              >
-                Sign Out (@{user?.username})
-              </button>
-            ) : (
-              <Link
-                to="/login"
-                onClick={closeMobileMenu}
-                className="w-full py-3 rounded-xl text-center text-sm font-bold text-white dark:text-black bg-black dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-200 transition-colors"
-              >
-                Log In / Register
+            {token && (
+              <Link to="/profile" onClick={closeMobileMenu} className="mb-2 flex items-center gap-3 rounded-2xl bg-slate-100 dark:bg-slate-800 p-3 transition-colors hover:bg-slate-200 dark:hover:bg-slate-700">
+                <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user?.username || 'User')}&background=09090b&color=fff`} alt="Profile" className="h-9 w-9 rounded-xl object-cover" />
+                <span className="min-w-0 flex-1 text-sm font-extrabold text-slate-900 dark:text-white">@{user?.username}</span>
+                <ArrowRight className="h-4 w-4 text-slate-400" />
               </Link>
             )}
+
+            <div className="grid grid-cols-2 gap-2">
+              {NAV_ITEMS.map((item) => {
+                const Icon = item.icon;
+                return <NavLink key={item.to} to={item.to} onClick={closeMobileMenu} className={({ isActive }) => `flex items-center gap-3 rounded-2xl px-3 py-3 text-sm font-extrabold transition-all ${isActive ? "bg-black dark:bg-white text-white dark:text-black shadow-md" : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"}`}>
+                  <Icon className="h-4 w-4" />
+                  {item.label}
+                </NavLink>;
+              })}
+            </div>
+
+            <div className="mt-3 border-t border-slate-100 dark:border-slate-800 pt-3">
+              {token ? (
+                <button onClick={() => { logout(); closeMobileMenu(); }} className="flex w-full items-center justify-center gap-2 rounded-2xl border border-rose-200 dark:border-rose-900/50 py-3 text-sm font-extrabold text-rose-600 dark:text-rose-400 transition-colors hover:bg-rose-50 dark:hover:bg-rose-950/30 cursor-pointer">
+                  <LogOut className="h-4 w-4" /> Sign out
+                </button>
+              ) : (
+                <Link to="/login" onClick={closeMobileMenu} className="flex w-full items-center justify-center gap-2 rounded-2xl bg-black dark:bg-white py-3 text-sm font-extrabold text-white dark:text-black transition-colors hover:bg-slate-800 dark:hover:bg-slate-200">
+                  Log in or register <ArrowRight className="h-4 w-4" />
+                </Link>
+              )}
+            </div>
           </div>
         </motion.div>
       )}
