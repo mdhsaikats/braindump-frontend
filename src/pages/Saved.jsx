@@ -74,14 +74,28 @@ const PencilSimple = ({ className }) => (
   </svg>
 );
 
-const SavedIdeaCard = ({ idea, currentUser, onRemove, onLikeToggle, onEdit, onOpen }) => {
+const SavedIdeaCard = ({
+  idea,
+  currentUser,
+  onRemove,
+  onLikeToggle,
+  onEdit,
+  onOpen,
+}) => {
   const authorName = idea.author_name || idea.author?.name || "anonymous";
-  const avatarUrl = idea.author?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(authorName)}&background=f1f5f9&color=0f172a`;
+  const avatarUrl =
+    idea.author?.avatar ||
+    `https://ui-avatars.com/api/?name=${encodeURIComponent(authorName)}&background=f1f5f9&color=0f172a`;
   const tags = Array.isArray(idea.tags) ? idea.tags : [];
-  const isOwner = currentUser && (idea.user_id === currentUser.id || idea.user_id === currentUser.userId);
+  const isOwner =
+    currentUser &&
+    (idea.user_id === currentUser.id || idea.user_id === currentUser.userId);
 
   return (
-    <article onClick={() => onOpen(idea)} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-black/40 dark:hover:border-white/40 transition-all duration-300 flex flex-col cursor-pointer group overflow-hidden">
+    <article
+      onClick={() => onOpen(idea)}
+      className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-black/40 dark:hover:border-white/40 transition-all duration-300 flex flex-col cursor-pointer group overflow-hidden"
+    >
       <div className="p-5 flex-1 flex flex-col">
         <div className="flex justify-between items-start mb-3 gap-3">
           <h3 className="text-lg font-bold text-slate-900 dark:text-white leading-snug group-hover:text-black dark:group-hover:text-slate-100 transition-colors line-clamp-2">
@@ -108,7 +122,10 @@ const SavedIdeaCard = ({ idea, currentUser, onRemove, onLikeToggle, onEdit, onOp
               className="flex-shrink-0 text-slate-900 dark:text-white hover:text-black dark:hover:text-slate-200 p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none cursor-pointer"
               title="Remove from saved"
             >
-              <BookmarkSimple weight="fill" className="text-lg text-black dark:text-white" />
+              <BookmarkSimple
+                weight="fill"
+                className="text-lg text-black dark:text-white"
+              />
             </button>
           </div>
         </div>
@@ -153,10 +170,14 @@ const SavedIdeaCard = ({ idea, currentUser, onRemove, onLikeToggle, onEdit, onOp
             <Heart
               weight={idea.is_liked ? "fill" : "regular"}
               className={`text-base transition-transform active:scale-125 ${
-                idea.is_liked ? "text-rose-500 fill-rose-500" : "text-slate-400 dark:text-slate-500 group-hover/like:text-rose-500"
+                idea.is_liked
+                  ? "text-rose-500 fill-rose-500"
+                  : "text-slate-400 dark:text-slate-500 group-hover/like:text-rose-500"
               }`}
             />
-            <span className={`text-xs font-semibold ${idea.is_liked ? "text-rose-600 dark:text-rose-400 font-bold" : "text-slate-600 dark:text-slate-400"}`}>
+            <span
+              className={`text-xs font-semibold ${idea.is_liked ? "text-rose-600 dark:text-rose-400 font-bold" : "text-slate-600 dark:text-slate-400"}`}
+            >
               {idea.likes || 0}
             </span>
           </button>
@@ -204,7 +225,9 @@ const Saved = () => {
           const currentlyLiked = idea.is_liked || false;
           const newLiked = !currentlyLiked;
           const currentLikes = parseInt(idea.likes || 0, 10);
-          const newLikes = newLiked ? currentLikes + 1 : Math.max(0, currentLikes - 1);
+          const newLikes = newLiked
+            ? currentLikes + 1
+            : Math.max(0, currentLikes - 1);
           return {
             ...idea,
             is_liked: newLiked,
@@ -212,7 +235,7 @@ const Saved = () => {
           };
         }
         return idea;
-      })
+      }),
     );
 
     try {
@@ -225,9 +248,13 @@ const Saved = () => {
         setSavedIdeas((prev) =>
           prev.map((idea) =>
             idea.id === id
-              ? { ...idea, likes: data.data.likes, is_liked: data.data.is_liked }
-              : idea
-          )
+              ? {
+                  ...idea,
+                  likes: data.data.likes,
+                  is_liked: data.data.is_liked,
+                }
+              : idea,
+          ),
         );
       }
     } catch (err) {
@@ -253,7 +280,9 @@ const Saved = () => {
 
   const handleUpdateIdea = (updatedIdea) => {
     setSavedIdeas((prev) =>
-      prev.map((idea) => (idea.id === updatedIdea.id ? { ...idea, ...updatedIdea } : idea))
+      prev.map((idea) =>
+        idea.id === updatedIdea.id ? { ...idea, ...updatedIdea } : idea,
+      ),
     );
   };
 
@@ -267,7 +296,8 @@ const Saved = () => {
               Bookmarked & Saved Ideas
             </h2>
             <p className="text-slate-500 dark:text-slate-400 text-sm font-medium mt-1">
-              Your personal reading list and project concepts saved for later reference.
+              Your personal reading list and project concepts saved for later
+              reference.
             </p>
           </div>
         </div>
@@ -276,10 +306,12 @@ const Saved = () => {
         {loading ? (
           <div className="flex flex-col justify-center items-center py-20 text-slate-900 dark:text-slate-100 gap-4">
             <LoaderGooeyBlobs color="currentColor" size={16} />
-            <span className="text-sm font-semibold text-slate-600 dark:text-slate-300">Loading saved ideas...</span>
+            <span className="text-sm font-semibold text-slate-600 dark:text-slate-300">
+              Loading saved ideas...
+            </span>
           </div>
         ) : savedIdeas.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {savedIdeas.map((idea) => (
               <SavedIdeaCard
                 key={idea.id}
@@ -301,7 +333,8 @@ const Saved = () => {
               No saved ideas yet
             </h3>
             <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">
-              Browse the explore feed and click the bookmark icon on any idea to save it here.
+              Browse the explore feed and click the bookmark icon on any idea to
+              save it here.
             </p>
             <a
               href="/explore"
@@ -319,7 +352,10 @@ const Saved = () => {
         idea={editingIdea}
         onUpdated={handleUpdateIdea}
       />
-      <IdeaDetailsModal idea={selectedIdea} onClose={() => setSelectedIdea(null)} />
+      <IdeaDetailsModal
+        idea={selectedIdea}
+        onClose={() => setSelectedIdea(null)}
+      />
     </div>
   );
 };

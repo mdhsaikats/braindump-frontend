@@ -82,11 +82,16 @@ const Trash = ({ className }) => (
 
 const MyIdeaCard = ({ idea, onEdit, onDelete, onOpen }) => {
   const authorName = idea.author_name || idea.author?.name || "you";
-  const avatarUrl = idea.author?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(authorName)}&background=f1f5f9&color=0f172a`;
+  const avatarUrl =
+    idea.author?.avatar ||
+    `https://ui-avatars.com/api/?name=${encodeURIComponent(authorName)}&background=f1f5f9&color=0f172a`;
   const tags = Array.isArray(idea.tags) ? idea.tags : [];
 
   return (
-    <article onClick={() => onOpen(idea)} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-black/40 dark:hover:border-white/40 transition-all duration-300 flex flex-col cursor-pointer group overflow-hidden">
+    <article
+      onClick={() => onOpen(idea)}
+      className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-black/40 dark:hover:border-white/40 transition-all duration-300 flex flex-col cursor-pointer group overflow-hidden"
+    >
       <div className="p-5 flex-1 flex flex-col">
         <div className="flex justify-between items-start mb-3 gap-3">
           <div>
@@ -207,7 +212,9 @@ const MyIdeas = () => {
 
   const handleUpdateIdea = (updatedIdea) => {
     setIdeas((prev) =>
-      prev.map((idea) => (idea.id === updatedIdea.id ? { ...idea, ...updatedIdea } : idea))
+      prev.map((idea) =>
+        idea.id === updatedIdea.id ? { ...idea, ...updatedIdea } : idea,
+      ),
     );
   };
 
@@ -225,7 +232,7 @@ const MyIdeas = () => {
             </p>
           </div>
 
-          <button 
+          <button
             onClick={openShareModal}
             className="inline-flex items-center justify-center px-5 py-3 rounded-2xl text-sm font-extrabold text-white dark:text-black bg-black dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-200 shadow-md hover:shadow-xl transition-all self-start sm:self-auto cursor-pointer"
           >
@@ -238,10 +245,12 @@ const MyIdeas = () => {
         {loading ? (
           <div className="flex flex-col justify-center items-center py-20 text-slate-900 dark:text-slate-100 gap-4">
             <LoaderGooeyBlobs color="currentColor" size={16} />
-            <span className="text-sm font-semibold text-slate-600 dark:text-slate-300">Loading your ideas...</span>
+            <span className="text-sm font-semibold text-slate-600 dark:text-slate-300">
+              Loading your ideas...
+            </span>
           </div>
         ) : ideas.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {ideas.map((idea) => (
               <MyIdeaCard
                 key={idea.id}
@@ -263,7 +272,7 @@ const MyIdeas = () => {
             <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">
               Share your project ideas with the community and get feedback.
             </p>
-            <button 
+            <button
               onClick={openShareModal}
               className="inline-flex items-center justify-center px-4 py-2.5 text-sm font-bold text-white dark:text-black bg-black dark:bg-white rounded-lg hover:bg-slate-800 dark:hover:bg-slate-200 transition-colors cursor-pointer"
             >
@@ -280,7 +289,10 @@ const MyIdeas = () => {
         idea={editingIdea}
         onUpdated={handleUpdateIdea}
       />
-      <IdeaDetailsModal idea={selectedIdea} onClose={() => setSelectedIdea(null)} />
+      <IdeaDetailsModal
+        idea={selectedIdea}
+        onClose={() => setSelectedIdea(null)}
+      />
     </div>
   );
 };
