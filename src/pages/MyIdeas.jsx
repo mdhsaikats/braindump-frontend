@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { MessageCircle } from "lucide-react";
 import { useOutletContext } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { API_BASE_URL } from "../config/api";
@@ -152,6 +153,19 @@ const MyIdeaCard = ({ idea, onEdit, onDelete, onOpen }) => {
           </span>
         </div>
         <div className="flex items-center gap-4 text-slate-500 dark:text-slate-400">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpen(idea);
+            }}
+            className="flex items-center gap-1.5 transition-colors focus:outline-none cursor-pointer group/comment"
+            title="Comments"
+          >
+            <MessageCircle className="w-4 h-4 text-slate-400 dark:text-slate-500 group-hover/comment:text-slate-900 dark:group-hover/comment:text-white transition-colors" />
+            <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">
+              {idea.comments_count || idea.comments?.length || 0}
+            </span>
+          </button>
           <div className="flex items-center gap-1.5 transition-colors">
             <Heart
               weight={idea.likes > 0 ? "fill" : "regular"}
