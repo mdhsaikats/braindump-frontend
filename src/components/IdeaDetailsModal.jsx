@@ -5,7 +5,7 @@ import { API_BASE_URL } from "../config/api";
 import { useAuth } from "../context/AuthContext";
 
 const IdeaDetailsModal = ({ idea, onClose }) => {
-  const { token } = useAuth();
+  const { token, user: currentUser } = useAuth();
   const [comments, setComments] = useState([]);
   const [loadingComments, setLoadingComments] = useState(false);
   const [commentText, setCommentText] = useState("");
@@ -65,7 +65,7 @@ const IdeaDetailsModal = ({ idea, onClose }) => {
     if (!commentText.trim()) return;
 
     if (!token) {
-      setError("Please sign in to comment.");
+      setError("Please sign in to post comments.");
       return;
     }
 
@@ -93,9 +93,16 @@ const IdeaDetailsModal = ({ idea, onClose }) => {
           id: Date.now(),
           comment: commentText.trim(),
           created_at: new Date().toISOString(),
-          author_name: "You",
+          author_name: currentUser?.username || "You",
         };
-        setComments((prev) => [newCommentObj, ...prev]);
+        setComments((prev) => [
+          {
+            ...newCommentObj,
+            author_name:
+              newCommentObj.author_name || currentUser?.username || "You",
+          },
+          ...prev,
+        ]);
         setCommentText("");
       } else {
         setError(data.message || "Failed to post comment");
@@ -179,49 +186,63 @@ const IdeaDetailsModal = ({ idea, onClose }) => {
 
           {/* Comments Section */}
           <div className="pt-6 border-t border-slate-200 dark:border-slate-800">
-            <div className="flex items-center gap-2 mb-4">
-              <MessageCircle className="w-5 h-5 text-slate-700 dark:text-slate-300" />
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                Comments ({comments.length})
-              </h3>
+            <div className="flex items-center justify-between gap-2 mb-4">
+              <div className="flex items-center gap-2">
+                <MessageCircle className="w-5 h-5 text-slate-700 dark:text-slate-300" />
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                  Discussion
+                </h3>
+              </div>
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                {comments.length}{" "}
+                {comments.length === 1 ? "comment" : "comments"}
+              </span>
             </div>
 
             {/* Comment List */}
             {loadingComments ? (
-              <div className="flex items-center justify-center py-6 text-slate-400 gap-2">
-                <Loader2 className="w-4 h-4 animate-spin" />
+              <div className="flex items-center justify-center py-8 text-slate-400 gap-2">
+                <Loader2 className="w-5 h-5 animate-spin" />
                 <span className="text-xs font-semibold">
                   Loading comments...
                 </span>
               </div>
             ) : comments.length > 0 ? (
-              <div className="space-y-3.5 mb-6">
+              <div className="space-y-3.5 mb-2">
                 {comments.map((item) => {
                   const cAuthor = item.author_name || "User";
                   const cAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(cAuthor)}&background=f1f5f9&color=0f172a`;
                   return (
                     <div
                       key={item.id}
-                      className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800/80"
+                      className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800/80 transition-all hover:border-slate-300 dark:hover:border-slate-700"
                     >
-                      <div className="flex items-center justify-between gap-2 mb-1.5">
+                      <div className="flex items-center justify-between gap-2 mb-2">
                         <div className="flex items-center gap-2">
                           <img
                             src={cAvatar}
                             alt={cAuthor}
-                            className="w-5 h-5 rounded-full"
+                            className="w-6 h-6 rounded-full ring-1 ring-slate-200 dark:ring-slate-700"
                           />
-                          <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                          <span className="text-xs font-extrabold text-slate-800 dark:text-slate-200">
                             @{cAuthor}
                           </span>
                         </div>
                         {item.created_at && (
                           <span className="text-[11px] font-medium text-slate-400 dark:text-slate-500">
-                            {new Date(item.created_at).toLocaleDateString()}
+                            {new Date(item.created_at).toLocaleDateString(
+                              undefined,
+                              {
+                                month: "short",
+                                day: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              },
+                            )}
                           </span>
                         )}
                       </div>
-                      <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed pl-7 break-words">
+                      <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed pl-8 break-words font-normal">
                         {item.comment}
                       </p>
                     </div>
@@ -229,9 +250,12 @@ const IdeaDetailsModal = ({ idea, onClose }) => {
                 })}
               </div>
             ) : (
-              <p className="text-xs font-medium text-slate-400 dark:text-slate-500 italic mb-6">
-                No comments yet. Be the first to share your thoughts!
-              </p>
+              <div className="py-8 text-center bg-slate-50/50 dark:bg-slate-800/20 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800">
+                <MessageCircle className="w-8 h-8 mx-auto text-slate-300 dark:text-slate-600 mb-2" />
+                <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+                  No comments yet. Start the conversation!
+                </p>
+              </div>
             )}
           </div>
         </div>
@@ -239,7 +263,9 @@ const IdeaDetailsModal = ({ idea, onClose }) => {
         {/* Comment Input Form at Bottom */}
         <div className="p-4 sm:p-5 bg-slate-50/80 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 shrink-0">
           {error && (
-            <p className="text-xs font-semibold text-rose-500 mb-2">{error}</p>
+            <p className="text-xs font-semibold text-rose-500 mb-2 px-1 animate-fadeIn">
+              {error}
+            </p>
           )}
           <form
             onSubmit={handleCommentSubmit}
@@ -249,13 +275,16 @@ const IdeaDetailsModal = ({ idea, onClose }) => {
               type="text"
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}
-              placeholder="Write a comment..."
-              className="flex-1 px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-black/20 dark:focus:ring-white/20 transition-all"
+              placeholder={
+                token ? "Write a comment..." : "Please sign in to comment..."
+              }
+              disabled={!token}
+              className="flex-1 px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-black/20 dark:focus:ring-white/20 transition-all font-medium disabled:opacity-60 disabled:cursor-not-allowed"
             />
             <button
               type="submit"
-              disabled={submitting || !commentText.trim()}
-              className="inline-flex items-center justify-center p-2.5 rounded-2xl bg-black dark:bg-white text-white dark:text-black hover:bg-slate-800 dark:hover:bg-slate-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              disabled={submitting || !commentText.trim() || !token}
+              className="inline-flex items-center justify-center p-3 rounded-2xl bg-black dark:bg-white text-white dark:text-black hover:bg-slate-800 dark:hover:bg-slate-200 transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shadow-xs active:scale-95"
               title="Post Comment"
             >
               {submitting ? (
