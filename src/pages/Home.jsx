@@ -285,8 +285,7 @@ const IdeaCard = ({
           >
             <MessageCircle className="w-4 h-4 text-slate-400 dark:text-slate-500 group-hover/comment:text-slate-900 dark:group-hover/comment:text-white transition-colors" />
             <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">
-              {idea.comments_count || idea.comments?.length || 0}
-            </span>
+              {parseInt(idea.comments_count || idea.comments?.length || 0, 10)}
           </button>
           <button
             onClick={(e) => {
