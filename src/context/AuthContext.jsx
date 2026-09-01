@@ -11,6 +11,14 @@ export const AuthProvider = ({ children }) => {
   // Fetch the user's profile info
   const fetchProfile = async (authToken) => {
     try {
+      // Immediate partial user from JWT
+      try {
+        const payload = JSON.parse(atob(authToken.split('.')[1]));
+        if (payload?.userId) {
+          setUser((prev) => prev || { id: payload.userId, username: payload.username, email: payload.email });
+        }
+      } catch (e) {}
+
       const response = await fetch(`${API_BASE_URL}/api/v1/users/profile`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
@@ -19,8 +27,11 @@ export const AuthProvider = ({ children }) => {
 
       const result = await response.json();
 
-      if (response.ok && result.success) {
-        setUser(result.data);
+      if (response.ok && result.success && result.data) {
+        setUser({
+          ...result.data,
+          id: result.data.id || result.data.userId || JSON.parse(atob(authToken.split('.')[1]))?.userId,
+        });
       } else {
         // Token is invalid/expired
         logout();

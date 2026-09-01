@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import { io } from "socket.io-client";
 import { API_BASE_URL } from "../config/api";
 import { useAuth } from "./AuthContext";
@@ -32,9 +38,11 @@ export const NotificationProvider = ({ children }) => {
     }
   }, [token]);
 
+  const currentUserId = user?.id || user?.userId;
+
   // Connect to Socket.IO and listen for real-time notifications
   useEffect(() => {
-    if (!token || !user?.id) {
+    if (!token || !currentUserId) {
       if (socket) {
         socket.disconnect();
         setSocket(null);
@@ -52,8 +60,17 @@ export const NotificationProvider = ({ children }) => {
     });
 
     socketClient.on("connect", () => {
-      console.log("Socket.IO connected:", socketClient.id);
-      socketClient.emit("register_user", user.id);
+      console.log(
+        "Socket.IO connected:",
+        socketClient.id,
+        "for user:",
+        currentUserId,
+      );
+      socketClient.emit("register_user", String(currentUserId));
+    });
+
+    socketClient.on("connect_error", (err) => {
+      console.warn("Socket.IO connection error:", err.message);
     });
 
     // Listen for new real-time notification
@@ -67,7 +84,10 @@ export const NotificationProvider = ({ children }) => {
         reference_id: incoming.data?.reference_id,
         is_read: false,
         created_at: incoming.data?.created_at || new Date().toISOString(),
-        actor_username: incoming.data?.actor?.username || "Someone",
+        actor_username:
+          incoming.data?.actor?.username ||
+          incoming.data?.actor_username ||
+          "Someone",
       };
 
       setNotifications((prev) => [newNotif, ...prev]);
@@ -78,13 +98,13 @@ export const NotificationProvider = ({ children }) => {
     return () => {
       socketClient.disconnect();
     };
-  }, [token, user?.id, fetchNotifications]);
+  }, [token, currentUserId, fetchNotifications]);
 
   // Mark single notification as read
   const markAsRead = async (id) => {
     // Optimistic update
     setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, is_read: true } : n))
+      prev.map((n) => (n.id === id ? { ...n, is_read: true } : n)),
     );
 
     if (!token) return;
@@ -140,7 +160,9 @@ export const NotificationProvider = ({ children }) => {
 export const useNotifications = () => {
   const context = useContext(NotificationContext);
   if (!context) {
-    throw new Error("useNotifications must be used within a NotificationProvider");
+    throw new Error(
+      "useNotifications must be used within a NotificationProvider",
+    );
   }
   return context;
 };
