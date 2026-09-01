@@ -4,6 +4,7 @@ import React, {
   useState,
   useEffect,
   useCallback,
+  useRef,
 } from "react";
 import { io } from "socket.io-client";
 import { API_BASE_URL } from "../config/api";
@@ -16,12 +17,15 @@ export const NotificationProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
   const [socket, setSocket] = useState(null);
+  const isFetchingRef = useRef(false);
+
+  const currentUserId = user?.id || user?.userId;
 
   // Fetch notifications from backend API
   const fetchNotifications = useCallback(async () => {
-    if (!token) return;
+    if (!token || isFetchingRef.current) return;
     try {
-      setLoading(true);
+      isFetchingRef.current = true;
       const response = await fetch(`${API_BASE_URL}/api/v1/notifications`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -34,43 +38,60 @@ export const NotificationProvider = ({ children }) => {
     } catch (error) {
       console.error("Error fetching notifications:", error);
     } finally {
+      isFetchingRef.current = false;
       setLoading(false);
     }
   }, [token]);
 
-  const currentUserId = user?.id || user?.userId;
+  // 1. Fetch immediately whenever token is available & set up polling fallback
+  useEffect(() => {
+    if (!token) {
+      setNotifications([]);
+      return;
+    }
 
-  // Connect to Socket.IO and listen for real-time notifications
+    // Initial fetch
+    fetchNotifications();
+
+    // Periodic polling every 8 seconds (critical fallback for Vercel/serverless environments)
+    const pollInterval = setInterval(() => {
+      fetchNotifications();
+    }, 8000);
+
+    // Refetch when tab regains focus
+    const handleFocus = () => fetchNotifications();
+    window.addEventListener("focus", handleFocus);
+
+    return () => {
+      clearInterval(pollInterval);
+      window.removeEventListener("focus", handleFocus);
+    };
+  }, [token, fetchNotifications]);
+
+  // 2. Real-time WebSocket connection via Socket.IO
   useEffect(() => {
     if (!token || !currentUserId) {
       if (socket) {
         socket.disconnect();
         setSocket(null);
       }
-      setNotifications([]);
       return;
     }
 
-    // Initial fetch from database
-    fetchNotifications();
-
-    // Initialize Socket.io connection
     const socketClient = io(API_BASE_URL, {
       transports: ["websocket", "polling"],
+      reconnectionAttempts: 5,
+      reconnectionDelay: 2000,
     });
 
     socketClient.on("connect", () => {
-      console.log(
-        "Socket.IO connected:",
-        socketClient.id,
-        "for user:",
-        currentUserId,
-      );
+      console.log("Socket.IO connected:", socketClient.id, "for user:", currentUserId);
       socketClient.emit("register_user", String(currentUserId));
     });
 
     socketClient.on("connect_error", (err) => {
-      console.warn("Socket.IO connection error:", err.message);
+      // Soft warning - polling will seamlessly handle updates
+      console.log("Socket.IO connection status:", err.message);
     });
 
     // Listen for new real-time notification
@@ -90,7 +111,11 @@ export const NotificationProvider = ({ children }) => {
           "Someone",
       };
 
-      setNotifications((prev) => [newNotif, ...prev]);
+      setNotifications((prev) => {
+        // Avoid duplicates
+        if (prev.some((n) => n.id === newNotif.id)) return prev;
+        return [newNotif, ...prev];
+      });
     });
 
     setSocket(socketClient);
@@ -98,7 +123,7 @@ export const NotificationProvider = ({ children }) => {
     return () => {
       socketClient.disconnect();
     };
-  }, [token, currentUserId, fetchNotifications]);
+  }, [token, currentUserId]);
 
   // Mark single notification as read
   const markAsRead = async (id) => {
