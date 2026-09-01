@@ -1,4 +1,8 @@
-import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+} from "react-router-dom";
 import Layout from "./layout/Layout";
 import Home from "./pages/Home";
 import Auth from "./pages/Auth";
@@ -10,18 +14,23 @@ import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import { AuthProvider } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
+import { NotificationProvider } from "./context/NotificationContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 const Placeholder = ({ title }) => (
   <div className="flex flex-col items-center justify-center min-h-[60vh] text-slate-800 dark:text-slate-200">
     <h2 className="text-2xl font-bold mb-2">{title} Page</h2>
-    <p className="text-slate-500 dark:text-slate-400">This page is under construction.</p>
+    <p className="text-slate-500 dark:text-slate-400">
+      This page is under construction.
+    </p>
   </div>
 );
 
 const NotFound = () => (
   <div className="flex flex-col items-center justify-center min-h-[60vh] text-slate-800 dark:text-slate-200">
-    <h2 className="text-3xl font-extrabold mb-2 text-rose-600 dark:text-rose-500">404</h2>
+    <h2 className="text-3xl font-extrabold mb-2 text-rose-600 dark:text-rose-500">
+      404
+    </h2>
     <p className="text-slate-500 dark:text-slate-400 mb-4">
       Oops! The page you are looking for doesn't exist.
     </p>
@@ -95,11 +104,12 @@ function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <RouterProvider router={router} />
+        <NotificationProvider>
+          <RouterProvider router={router} />
+        </NotificationProvider>
       </AuthProvider>
     </ThemeProvider>
   );
 }
 
 export default App;
-

@@ -1,55 +1,55 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Bell, Check, Sparkles, Heart, MessageSquare } from 'lucide-react';
+import { Bell, Check, Sparkles, Heart, Bookmark, MessageSquare } from 'lucide-react';
+import { useNotifications } from '../context/NotificationContext';
 
-const INITIAL_NOTIFICATIONS = [
-  {
-    id: 1,
-    title: "New reaction",
-    description: "Someone liked your idea 'AI Code Reviewer'",
-    time: "5m ago",
-    read: false,
-    icon: Heart,
-    color: "text-rose-500 bg-rose-50 dark:bg-rose-950/40",
-  },
-  {
-    id: 2,
-    title: "BrainDump Update",
-    description: "Welcome to BrainDump! Explore new ideas in the community.",
-    time: "1h ago",
-    read: false,
-    icon: Sparkles,
-    color: "text-amber-500 bg-amber-50 dark:bg-amber-950/40",
-  },
-  {
-    id: 3,
-    title: "New feedback",
-    description: "You have a new comment on your saved project.",
-    time: "2d ago",
-    read: true,
-    icon: MessageSquare,
-    color: "text-blue-500 bg-blue-50 dark:bg-blue-950/40",
-  },
-];
+function formatRelativeTime(dateString) {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffInSeconds = Math.floor((now - date) / 1000);
+
+  if (diffInSeconds < 60) return 'Just now';
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  if (diffInHours < 24) return `${diffInHours}h ago`;
+  const diffInDays = Math.floor(diffInHours / 24);
+  if (diffInDays < 7) return `${diffInDays}d ago`;
+  return date.toLocaleDateString();
+}
+
+function getNotificationIcon(type) {
+  switch (type) {
+    case 'like':
+      return {
+        icon: Heart,
+        color: 'text-rose-500 bg-rose-50 dark:bg-rose-950/40',
+      };
+    case 'save':
+      return {
+        icon: Bookmark,
+        color: 'text-amber-500 bg-amber-50 dark:bg-amber-950/40',
+      };
+    case 'comment':
+      return {
+        icon: MessageSquare,
+        color: 'text-blue-500 bg-blue-50 dark:bg-blue-950/40',
+      };
+    default:
+      return {
+        icon: Sparkles,
+        color: 'text-indigo-500 bg-indigo-50 dark:bg-indigo-950/40',
+      };
+  }
+}
 
 const NotificationDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [notifications, setNotifications] = useState(INITIAL_NOTIFICATIONS);
   const dropdownRef = useRef(null);
-
-  const unreadCount = notifications.filter((n) => !n.read).length;
+  const { notifications, unreadCount, markAsRead, markAllAsRead, loading } = useNotifications();
 
   const toggleDropdown = () => setIsOpen((prev) => !prev);
-
-  const markAllAsRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
-  };
-
-  const markAsRead = (id) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, read: true } : n))
-    );
-  };
 
   // Close dropdown on click outside or Escape key
   useEffect(() => {
@@ -131,42 +131,48 @@ const NotificationDropdown = () => {
 
             {/* Notification List */}
             <div className="max-h-80 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800/60">
-              {notifications.length === 0 ? (
+              {loading && notifications.length === 0 ? (
+                <div className="p-8 text-center text-xs text-slate-400 dark:text-slate-500">
+                  Loading notifications...
+                </div>
+              ) : notifications.length === 0 ? (
                 <div className="p-8 text-center text-sm text-slate-500 dark:text-slate-400">
                   No notifications yet
                 </div>
               ) : (
                 notifications.map((item) => {
-                  const IconComponent = item.icon;
+                  const { icon: IconComponent, color } = getNotificationIcon(item.type);
+                  const isRead = Boolean(item.is_read);
+
                   return (
                     <div
                       key={item.id}
-                      onClick={() => markAsRead(item.id)}
+                      onClick={() => !isRead && markAsRead(item.id)}
                       className={`flex items-start gap-3 p-3.5 transition-colors cursor-pointer ${
-                        item.read
+                        isRead
                           ? 'bg-transparent hover:bg-slate-50 dark:hover:bg-slate-800/40'
                           : 'bg-slate-50/70 dark:bg-slate-800/50 hover:bg-slate-100/70 dark:hover:bg-slate-800/80'
                       }`}
                     >
-                      <div className={`p-2 rounded-xl shrink-0 ${item.color}`}>
+                      <div className={`p-2 rounded-xl shrink-0 ${color}`}>
                         <IconComponent className="w-4 h-4" />
                       </div>
 
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-1">
-                          <p className={`text-xs font-bold truncate ${item.read ? 'text-slate-700 dark:text-slate-300' : 'text-slate-900 dark:text-slate-100'}`}>
+                          <p className={`text-xs font-bold truncate ${isRead ? 'text-slate-700 dark:text-slate-300' : 'text-slate-900 dark:text-slate-100'}`}>
                             {item.title}
                           </p>
                           <span className="text-[10px] text-slate-400 dark:text-slate-500 shrink-0">
-                            {item.time}
+                            {formatRelativeTime(item.created_at)}
                           </span>
                         </div>
                         <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 mt-0.5 leading-relaxed">
-                          {item.description}
+                          {item.body}
                         </p>
                       </div>
 
-                      {!item.read && (
+                      {!isRead && (
                         <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0 self-center" />
                       )}
                     </div>
