@@ -1,10 +1,22 @@
-import React from 'react';
-import { Link, NavLink, useSearchParams, useNavigate } from 'react-router-dom';
-import { motion } from 'motion/react';
-import { Search, Menu, X, Sun, Moon, Compass, Lightbulb, Bookmark, UserRound, LogOut, ArrowRight } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
-import NotificationDropdown from './NotificationDropdown';
+import React from "react";
+import { Link, NavLink, useSearchParams, useNavigate } from "react-router-dom";
+import { motion } from "motion/react";
+import {
+  Search,
+  Menu,
+  X,
+  Sun,
+  Moon,
+  Compass,
+  Lightbulb,
+  Bookmark,
+  UserRound,
+  LogOut,
+  ArrowRight,
+} from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
+import NotificationDropdown from "./NotificationDropdown";
 
 const NAV_ITEMS = [
   { to: "/explore", label: "Explore", icon: Compass },
@@ -196,9 +208,19 @@ const NavBar = () => {
             </div>
 
             {token && (
-              <Link to="/profile" onClick={closeMobileMenu} className="mb-2 flex items-center gap-3 rounded-2xl bg-slate-100 dark:bg-slate-800 p-3 transition-colors hover:bg-slate-200 dark:hover:bg-slate-700">
-                <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user?.username || 'User')}&background=09090b&color=fff`} alt="Profile" className="h-9 w-9 rounded-xl object-cover" />
-                <span className="min-w-0 flex-1 text-sm font-extrabold text-slate-900 dark:text-white">@{user?.username}</span>
+              <Link
+                to="/profile"
+                onClick={closeMobileMenu}
+                className="mb-2 flex items-center gap-3 rounded-2xl bg-slate-100 dark:bg-slate-800 p-3 transition-colors hover:bg-slate-200 dark:hover:bg-slate-700"
+              >
+                <img
+                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user?.username || "User")}&background=09090b&color=fff`}
+                  alt="Profile"
+                  className="h-9 w-9 rounded-xl object-cover"
+                />
+                <span className="min-w-0 flex-1 text-sm font-extrabold text-slate-900 dark:text-white">
+                  @{user?.username}
+                </span>
                 <ArrowRight className="h-4 w-4 text-slate-400" />
               </Link>
             )}
@@ -206,20 +228,39 @@ const NavBar = () => {
             <div className="grid grid-cols-2 gap-2">
               {NAV_ITEMS.map((item) => {
                 const Icon = item.icon;
-                return <NavLink key={item.to} to={item.to} onClick={closeMobileMenu} className={({ isActive }) => `flex items-center gap-3 rounded-2xl px-3 py-3 text-sm font-extrabold transition-all ${isActive ? "bg-black dark:bg-white text-white dark:text-black shadow-md" : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"}`}>
-                  <Icon className="h-4 w-4" />
-                  {item.label}
-                </NavLink>;
+                return (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    onClick={closeMobileMenu}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 rounded-2xl px-3 py-3 text-sm font-extrabold transition-all ${isActive ? "bg-black dark:bg-white text-white dark:text-black shadow-md" : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"}`
+                    }
+                  >
+                    <Icon className="h-4 w-4" />
+                    {item.label}
+                  </NavLink>
+                );
               })}
             </div>
 
             <div className="mt-3 border-t border-slate-100 dark:border-slate-800 pt-3">
               {token ? (
-                <button onClick={() => { logout(); closeMobileMenu(); }} className="flex w-full items-center justify-center gap-2 rounded-2xl border border-rose-200 dark:border-rose-900/50 py-3 text-sm font-extrabold text-rose-600 dark:text-rose-400 transition-colors hover:bg-rose-50 dark:hover:bg-rose-950/30 cursor-pointer">
+                <button
+                  onClick={() => {
+                    logout();
+                    closeMobileMenu();
+                  }}
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl border border-rose-200 dark:border-rose-900/50 py-3 text-sm font-extrabold text-rose-600 dark:text-rose-400 transition-colors hover:bg-rose-50 dark:hover:bg-rose-950/30 cursor-pointer"
+                >
                   <LogOut className="h-4 w-4" /> Sign out
                 </button>
               ) : (
-                <Link to="/login" onClick={closeMobileMenu} className="flex w-full items-center justify-center gap-2 rounded-2xl bg-black dark:bg-white py-3 text-sm font-extrabold text-white dark:text-black transition-colors hover:bg-slate-800 dark:hover:bg-slate-200">
+                <Link
+                  to="/login"
+                  onClick={closeMobileMenu}
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-black dark:bg-white py-3 text-sm font-extrabold text-white dark:text-black transition-colors hover:bg-slate-800 dark:hover:bg-slate-200"
+                >
                   Log in or register <ArrowRight className="h-4 w-4" />
                 </Link>
               )}
