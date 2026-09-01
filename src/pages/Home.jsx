@@ -444,7 +444,7 @@ const Home = () => {
               <span className="text-base font-extrabold text-slate-700 dark:text-slate-300">Loading ideas feed...</span>
             </div>
           ) : ideas.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-16">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-16">
               {ideas.map((idea) => (
                 <IdeaCard
                   key={idea.id}

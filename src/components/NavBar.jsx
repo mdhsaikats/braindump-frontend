@@ -1,9 +1,10 @@
-import React from 'react';
-import { Link, NavLink, useSearchParams, useNavigate } from 'react-router-dom';
-import { motion } from 'motion/react';
-import { Search, Menu, X, Sun, Moon } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
+import React from "react";
+import { Link, NavLink, useSearchParams, useNavigate } from "react-router-dom";
+import { motion } from "motion/react";
+import { Search, Menu, X, Sun, Moon } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
+import NotificationDropdown from "./NotificationDropdown";
 
 const NAV_ITEMS = [
   { to: "/explore", label: "Explore" },
@@ -41,15 +42,20 @@ const NavBar = () => {
     <nav className="sticky top-0 z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-b border-slate-200/80 dark:border-slate-800 transition-colors duration-200">
       <div className="w-full px-4 sm:px-8 lg:px-12">
         <div className="flex items-center justify-between h-20">
-
           {/* Left: Logo */}
-          <Link to="/explore" onClick={closeMobileMenu} className="flex-shrink-0 flex items-center gap-3 group no-underline">
+          <Link
+            to="/explore"
+            onClick={closeMobileMenu}
+            className="flex-shrink-0 flex items-center gap-3 group no-underline"
+          >
             <img
               src="/logo/logo.png"
               alt="BrainDump Logo"
               className="w-10 h-10 rounded-xl object-contain shadow-xs transition-transform group-hover:scale-105"
             />
-            <span className="font-extrabold text-2xl tracking-tight text-black dark:text-white transition-colors">BrainDump</span>
+            <span className="font-extrabold text-2xl tracking-tight text-black dark:text-white transition-colors">
+              BrainDump
+            </span>
           </Link>
 
           {/* Center: Search Bar */}
@@ -76,7 +82,9 @@ const NavBar = () => {
                 to={item.to}
                 className={({ isActive }) =>
                   `relative text-sm font-extrabold px-4 py-2 rounded-full transition-colors ${
-                    isActive ? 'text-white dark:text-black' : 'text-slate-600 dark:text-slate-300 hover:text-black dark:hover:text-white'
+                    isActive
+                      ? "text-white dark:text-black"
+                      : "text-slate-600 dark:text-slate-300 hover:text-black dark:hover:text-white"
                   }`
                 }
               >
@@ -86,7 +94,11 @@ const NavBar = () => {
                       <motion.div
                         layoutId="navbar-active-pill"
                         className="absolute inset-0 bg-black dark:bg-white rounded-full shadow-xs"
-                        transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 400,
+                          damping: 32,
+                        }}
                       />
                     )}
                     <span className="relative z-10">{item.label}</span>
@@ -95,22 +107,35 @@ const NavBar = () => {
               </NavLink>
             ))}
           </div>
-          
+
           <div className="flex items-center gap-3 ml-4">
             {/* Dark Mode Toggle Button */}
             <button
               onClick={toggleDarkMode}
               className="p-2 rounded-full border border-slate-200 dark:border-slate-700/80 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-black dark:hover:text-white transition-all cursor-pointer"
               aria-label="Toggle Dark Mode"
-              title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+              title={
+                isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"
+              }
             >
-              {isDarkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-700" />}
+              {isDarkMode ? (
+                <Sun className="w-4 h-4 text-amber-400" />
+              ) : (
+                <Moon className="w-4 h-4 text-slate-700" />
+              )}
             </button>
 
+            {/* Notification Bell Dropdown */}
+            {token && <NotificationDropdown />}
+
             {token && (
-              <Link to="/profile" onClick={closeMobileMenu} className="flex items-center gap-2.5 group bg-slate-100 dark:bg-slate-800 hover:bg-slate-200/80 dark:hover:bg-slate-700 px-3 py-1.5 rounded-full border border-slate-200/60 dark:border-slate-700 transition-colors">
+              <Link
+                to="/profile"
+                onClick={closeMobileMenu}
+                className="flex items-center gap-2.5 group bg-slate-100 dark:bg-slate-800 hover:bg-slate-200/80 dark:hover:bg-slate-700 px-3 py-1.5 rounded-full border border-slate-200/60 dark:border-slate-700 transition-colors"
+              >
                 <img
-                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user?.username || 'User')}&background=09090b&color=fff`}
+                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user?.username || "User")}&background=09090b&color=fff`}
                   alt="Profile"
                   className="w-7 h-7 rounded-full ring-2 ring-white dark:ring-slate-700 object-cover"
                 />
@@ -127,8 +152,8 @@ const NavBar = () => {
                 Logout
               </button>
             ) : (
-              <NavLink 
-                to="/login" 
+              <NavLink
+                to="/login"
                 className="hidden sm:block text-xs font-bold text-white dark:text-black bg-black dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-200 px-4 py-2 rounded-xl shadow-xs transition-all"
               >
                 Login
@@ -140,10 +165,13 @@ const NavBar = () => {
               className="lg:hidden p-2 text-slate-900 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
               aria-label="Toggle Mobile Menu"
             >
-              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {isMobileMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
             </button>
           </div>
-
         </div>
       </div>
 
@@ -178,7 +206,9 @@ const NavBar = () => {
                 onClick={closeMobileMenu}
                 className={({ isActive }) =>
                   `px-4 py-3 rounded-xl text-base font-bold transition-all ${
-                    isActive ? "bg-black dark:bg-white text-white dark:text-black" : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+                    isActive
+                      ? "bg-black dark:bg-white text-white dark:text-black"
+                      : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
                   }`
                 }
               >
