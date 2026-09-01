@@ -184,11 +184,21 @@ const PencilSimple = ({ className }) => (
   </svg>
 );
 
-const IdeaCard = ({ idea, currentUser, onBookmarkToggle, onLikeToggle, onEdit }) => {
+const IdeaCard = ({
+  idea,
+  currentUser,
+  onBookmarkToggle,
+  onLikeToggle,
+  onEdit,
+}) => {
   const authorName = idea.author_name || idea.author?.name || "anonymous";
-  const avatarUrl = idea.author?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(authorName)}&background=f1f5f9&color=0f172a`;
+  const avatarUrl =
+    idea.author?.avatar ||
+    `https://ui-avatars.com/api/?name=${encodeURIComponent(authorName)}&background=f1f5f9&color=0f172a`;
   const tags = Array.isArray(idea.tags) ? idea.tags : [];
-  const isOwner = currentUser && (idea.user_id === currentUser.id || idea.user_id === currentUser.userId);
+  const isOwner =
+    currentUser &&
+    (idea.user_id === currentUser.id || idea.user_id === currentUser.userId);
 
   return (
     <article className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-black/40 dark:hover:border-white/40 transition-all duration-300 flex flex-col cursor-pointer group overflow-hidden">
@@ -270,10 +280,14 @@ const IdeaCard = ({ idea, currentUser, onBookmarkToggle, onLikeToggle, onEdit })
             <Heart
               weight={idea.is_liked ? "fill" : "regular"}
               className={`text-base transition-transform active:scale-125 ${
-                idea.is_liked ? "text-rose-500 fill-rose-500" : "text-slate-400 dark:text-slate-500 group-hover/like:text-rose-500"
+                idea.is_liked
+                  ? "text-rose-500 fill-rose-500"
+                  : "text-slate-400 dark:text-slate-500 group-hover/like:text-rose-500"
               }`}
             />
-            <span className={`text-xs font-semibold ${idea.is_liked ? "text-rose-600 dark:text-rose-400 font-bold" : "text-slate-600 dark:text-slate-400"}`}>
+            <span
+              className={`text-xs font-semibold ${idea.is_liked ? "text-rose-600 dark:text-rose-400 font-bold" : "text-slate-600 dark:text-slate-400"}`}
+            >
               {idea.likes || 0}
             </span>
           </button>
@@ -343,8 +357,10 @@ const Home = () => {
     // Optimistic UI update
     setIdeas((prev) =>
       prev.map((idea) =>
-        idea.id === id ? { ...idea, isBookmarked: !isCurrentlyBookmarked } : idea
-      )
+        idea.id === id
+          ? { ...idea, isBookmarked: !isCurrentlyBookmarked }
+          : idea,
+      ),
     );
 
     try {
@@ -364,8 +380,10 @@ const Home = () => {
       // Revert on error
       setIdeas((prev) =>
         prev.map((idea) =>
-          idea.id === id ? { ...idea, isBookmarked: isCurrentlyBookmarked } : idea
-        )
+          idea.id === id
+            ? { ...idea, isBookmarked: isCurrentlyBookmarked }
+            : idea,
+        ),
       );
     }
   };
@@ -378,11 +396,13 @@ const Home = () => {
       prev.map((idea) => {
         if (idea.id === id) {
           const nextLiked = !idea.is_liked;
-          const nextLikes = nextLiked ? (idea.likes || 0) + 1 : Math.max(0, (idea.likes || 0) - 1);
+          const nextLikes = nextLiked
+            ? (idea.likes || 0) + 1
+            : Math.max(0, (idea.likes || 0) - 1);
           return { ...idea, is_liked: nextLiked, likes: nextLikes };
         }
         return idea;
-      })
+      }),
     );
 
     try {
@@ -395,9 +415,13 @@ const Home = () => {
         setIdeas((prev) =>
           prev.map((idea) =>
             idea.id === id
-              ? { ...idea, likes: data.data.likes, is_liked: data.data.is_liked }
-              : idea
-          )
+              ? {
+                  ...idea,
+                  likes: data.data.likes,
+                  is_liked: data.data.is_liked,
+                }
+              : idea,
+          ),
         );
       }
     } catch (err) {
@@ -407,13 +431,18 @@ const Home = () => {
 
   const handleUpdateIdea = (updatedIdea) => {
     setIdeas((prev) =>
-      prev.map((idea) => (idea.id === updatedIdea.id ? { ...idea, ...updatedIdea } : idea))
+      prev.map((idea) =>
+        idea.id === updatedIdea.id ? { ...idea, ...updatedIdea } : idea,
+      ),
     );
   };
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans flex flex-col pt-4 transition-colors duration-200">
-      <main id="explore-ideas" className="flex-grow w-full px-4 sm:px-8 lg:px-12 flex flex-col lg:flex-row gap-10">
+      <main
+        id="explore-ideas"
+        className="flex-grow w-full px-4 sm:px-8 lg:px-12 flex flex-col lg:flex-row gap-10"
+      >
         {/* Main Content Area */}
         <div className="flex-1 min-w-0">
           {/* Feed Header & Controls */}
@@ -441,7 +470,9 @@ const Home = () => {
           {loading ? (
             <div className="flex flex-col justify-center items-center py-24 text-slate-900 dark:text-slate-100 gap-4">
               <LoaderGooeyBlobs color="currentColor" size={18} />
-              <span className="text-base font-extrabold text-slate-700 dark:text-slate-300">Loading ideas feed...</span>
+              <span className="text-base font-extrabold text-slate-700 dark:text-slate-300">
+                Loading ideas feed...
+              </span>
             </div>
           ) : ideas.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-16">
