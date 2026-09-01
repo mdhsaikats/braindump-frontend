@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Bell, Check, Sparkles, Heart, Bookmark, MessageSquare } from 'lucide-react';
+import { Bell, Check, Sparkles, Heart, Bookmark, MessageSquare, X } from 'lucide-react';
 import { useNotifications } from '../context/NotificationContext';
 
 function formatRelativeTime(dateString) {
@@ -50,6 +50,7 @@ const NotificationDropdown = () => {
   const { notifications, unreadCount, markAsRead, markAllAsRead, loading } = useNotifications();
 
   const toggleDropdown = () => setIsOpen((prev) => !prev);
+  const closeDropdown = () => setIsOpen(false);
 
   // Close dropdown on click outside or Escape key
   useEffect(() => {
@@ -95,15 +96,28 @@ const NotificationDropdown = () => {
         )}
       </button>
 
-      {/* Dropdown Menu */}
+      {/* Backdrop for mobile */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 8, scale: 0.96 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={closeDropdown}
+            className="fixed inset-0 bg-black/20 dark:bg-black/40 backdrop-blur-xs z-40 sm:hidden"
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Dropdown Menu - Centered on Mobile, Anchored Right on Desktop */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 8, scale: 0.96 }}
+            exit={{ opacity: 0, y: 10, scale: 0.95 }}
             transition={{ duration: 0.18, ease: "easeOut" }}
-            className="absolute right-0 mt-3 w-80 sm:w-96 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl z-50 overflow-hidden"
+            className="fixed sm:absolute left-4 right-4 sm:left-auto sm:right-0 top-20 sm:top-full sm:mt-3 max-w-sm sm:w-96 mx-auto sm:mx-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl z-50 overflow-hidden"
           >
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-slate-800">
@@ -118,19 +132,29 @@ const NotificationDropdown = () => {
                 )}
               </div>
 
-              {unreadCount > 0 && (
+              <div className="flex items-center gap-2">
+                {unreadCount > 0 && (
+                  <button
+                    onClick={markAllAsRead}
+                    className="flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors cursor-pointer"
+                  >
+                    <Check className="w-3.5 h-3.5" />
+                    Mark all read
+                  </button>
+                )}
+                {/* Mobile close button */}
                 <button
-                  onClick={markAllAsRead}
-                  className="flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors cursor-pointer"
+                  onClick={closeDropdown}
+                  className="sm:hidden p-1 text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-lg cursor-pointer"
+                  aria-label="Close"
                 >
-                  <Check className="w-3.5 h-3.5" />
-                  Mark all read
+                  <X className="w-4 h-4" />
                 </button>
-              )}
+              </div>
             </div>
 
             {/* Notification List */}
-            <div className="max-h-80 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800/60">
+            <div className="max-h-80 sm:max-h-96 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800/60">
               {loading && notifications.length === 0 ? (
                 <div className="p-8 text-center text-xs text-slate-400 dark:text-slate-500">
                   Loading notifications...
