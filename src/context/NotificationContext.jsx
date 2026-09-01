@@ -15,11 +15,35 @@ const NotificationContext = createContext(null);
 export const NotificationProvider = ({ children }) => {
   const { user, token } = useAuth();
   const [notifications, setNotifications] = useState([]);
+  const [toasts, setToasts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [socket, setSocket] = useState(null);
   const isFetchingRef = useRef(false);
+  const knownNotificationIds = useRef(new Set());
+  const isInitialFetch = useRef(true);
 
   const currentUserId = user?.id || user?.userId;
+
+  // Add a floating toast notification
+  const addToast = useCallback((notif) => {
+    const toastItem = {
+      id: notif.id || Date.now(),
+      title: notif.title || "New Notification",
+      body: notif.body || "",
+      type: notif.type || "general",
+    };
+
+    setToasts((prev) => [toastItem, ...prev.slice(0, 4)]); // Keep max 5 toasts
+
+    // Auto-dismiss after 5 seconds
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((t) => t.id !== toastItem.id));
+    }, 5000);
+  }, []);
+
+  const dismissToast = useCallback((id) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  }, []);
 
   // Fetch notifications from backend API
   const fetchNotifications = useCallback(async () => {
@@ -33,7 +57,22 @@ export const NotificationProvider = ({ children }) => {
       });
       const data = await response.json();
       if (response.ok && data.success) {
-        setNotifications(data.notifications || []);
+        const list = data.notifications || [];
+
+        // If not initial fetch, check if there are new unread notifications to toast
+        if (!isInitialFetch.current && list.length > 0) {
+          list.forEach((item) => {
+            if (!knownNotificationIds.current.has(item.id) && !item.is_read) {
+              addToast(item);
+            }
+          });
+        }
+
+        // Record all known IDs
+        list.forEach((item) => knownNotificationIds.current.add(item.id));
+        isInitialFetch.current = false;
+
+        setNotifications(list);
       }
     } catch (error) {
       console.error("Error fetching notifications:", error);
@@ -41,19 +80,22 @@ export const NotificationProvider = ({ children }) => {
       isFetchingRef.current = false;
       setLoading(false);
     }
-  }, [token]);
+  }, [token, addToast]);
 
   // 1. Fetch immediately whenever token is available & set up polling fallback
   useEffect(() => {
     if (!token) {
       setNotifications([]);
+      setToasts([]);
+      knownNotificationIds.current.clear();
+      isInitialFetch.current = true;
       return;
     }
 
     // Initial fetch
     fetchNotifications();
 
-    // Periodic polling every 8 seconds (critical fallback for Vercel/serverless environments)
+    // Periodic polling every 8 seconds
     const pollInterval = setInterval(() => {
       fetchNotifications();
     }, 8000);
@@ -90,7 +132,6 @@ export const NotificationProvider = ({ children }) => {
     });
 
     socketClient.on("connect_error", (err) => {
-      // Soft warning - polling will seamlessly handle updates
       console.log("Socket.IO connection status:", err.message);
     });
 
@@ -111,8 +152,10 @@ export const NotificationProvider = ({ children }) => {
           "Someone",
       };
 
+      knownNotificationIds.current.add(newNotif.id);
+      addToast(newNotif); // Pop up toast instantly!
+
       setNotifications((prev) => {
-        // Avoid duplicates
         if (prev.some((n) => n.id === newNotif.id)) return prev;
         return [newNotif, ...prev];
       });
@@ -123,7 +166,7 @@ export const NotificationProvider = ({ children }) => {
     return () => {
       socketClient.disconnect();
     };
-  }, [token, currentUserId]);
+  }, [token, currentUserId, addToast]);
 
   // Mark single notification as read
   const markAsRead = async (id) => {
@@ -170,6 +213,9 @@ export const NotificationProvider = ({ children }) => {
       value={{
         notifications,
         unreadCount,
+        toasts,
+        addToast,
+        dismissToast,
         loading,
         markAsRead,
         markAllAsRead,
